@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
+
+cd /tmp/openresty
+make install
+rm -rf /tmp/openresty
+
+echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
+
+echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
+
+cd /
+luarocks install lua-cjson
+luarocks install lua-resty-openidc
+
+echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"

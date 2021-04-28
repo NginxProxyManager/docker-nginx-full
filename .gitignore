@@ -1,0 +1,6 @@
+.idea
+.env
+.DS_Store
+._*
+*.code-workspace
+.vscode
