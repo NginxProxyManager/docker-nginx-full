@@ -1,5 +1,5 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang as go
-FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/nginx-full:${BASE_TAG:-latest}
+FROM golang:latest as go
+FROM jc21/nginx-full:${BASE_TAG:-latest}
 
 ARG TARGETPLATFORM
 
