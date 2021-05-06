@@ -17,6 +17,20 @@
 
 This is a base image for use in other images. See Dockerfile for build steps.
 
+The following is compiled/installed:
+
+- OpenResty
+- Lua
+- Certbot
+- mkcert
+- dbmate
+- Python3 and pip
+
+The following architectures are supported:
+
+- amd64
+- arm/v7
+- arm64
 
 ### Usage:
 

@@ -12,10 +12,11 @@ alias rm='rm -i'
 alias mv='mv -i'
 alias h='cd ~;clear;'
 
+. /etc/os-release
+
 echo -e -n '\E[1;34m'
 figlet -w 120 "nginx-full"
-echo -e "\E[1;36mOpenResty \E[1;32m${OPENRESTY_VERSION:-unknown}\E[1;36m, Kernel \E[1;32m$(uname -r)\E[0m"
+echo -e "\E[1;36mOpenResty \E[1;32m${OPENRESTY_VERSION:-unknown}\E[1;36m, ${ID:-debian} \E[1;32m${VERSION:-unknown}\E[1;36m, Certbot \E[1;32m$(certbot --version)\E[0m"
 echo -e -n '\E[1;34m'
 cat /built-for-arch
-echo -e -n '\E[0m'
-echo
+echo -e '\E[0m'
