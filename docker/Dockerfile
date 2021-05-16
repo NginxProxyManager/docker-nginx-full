@@ -93,10 +93,6 @@ LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Env var for bashrc
-ARG OPENRESTY_VERSION
-ENV OPENRESTY_VERSION=${OPENRESTY_VERSION}
-
 ARG TARGETPLATFORM
 RUN echo "Base: debian:stable-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
@@ -121,8 +117,6 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-
 COPY ./files/.bashrc /root/.bashrc
 
 # Copy lua and luarocks builds from first image
@@ -138,18 +132,25 @@ COPY ./scripts/install-openresty /tmp/install-openresty
 COPY --from=gobuilder /bin/mkcert /bin/mkcert
 COPY --from=gobuilder /go/bin/dbmate /bin/dbmate
 
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+
 # Copy certbot
 COPY --from=certbotbuilder /opt/certbot /opt/certbot
 RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
 	&& python3 -m venv /opt/certbot/ \
 	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
-ENV PATH="/opt/certbot/bin:$PATH"
+
+ARG OPENRESTY_VERSION
+ENV OPENRESTY_VERSION=${OPENRESTY_VERSION} \
+	CERT_HOME='/data/acme.sh/' \
+	PATH="/opt/certbot/bin:$PATH"
 
 # Install openresty, lua
 RUN apt-get update \
 	&& apt-get install -y \
 	gcc \
 	make \
+	socat \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
 	&& rm -f /tmp/install-lua \
@@ -158,6 +159,11 @@ RUN apt-get update \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
+
+# acme.sh
+RUN mkdir -p /data/acme.sh \
+	&& curl -o /bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh' \
+	&& chmod +x /bin/acme.sh
 
 LABEL org.label-schema.schema-version="1.0" \
 	org.label-schema.license="MIT" \
