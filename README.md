@@ -23,7 +23,6 @@ The following is compiled/installed:
 - Lua
 - Certbot
 - mkcert
-- dbmate
 - Python3 and pip
 
 The following architectures are supported:
