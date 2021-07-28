@@ -29,9 +29,9 @@ pipeline {
 					steps {
 						script {
 							env.BASE_TAG                = 'latest'
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
-							env.BUILDX_PUSH_TAGS_NODE   = "-t docker.io/jc21/${IMAGE}:node"
-							env.BUILDX_PUSH_TAGS_GOLANG = "-t docker.io/jc21/${IMAGE}:golang"
+							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS_NODE   = "-t docker.io/nginxproxymanager/${IMAGE}:node"
+							env.BUILDX_PUSH_TAGS_GOLANG = "-t docker.io/nginxproxymanager/${IMAGE}:golang"
 						}
 					}
 				}
@@ -45,7 +45,7 @@ pipeline {
 						script {
 							// Defaults to the Branch name, which is applies to all branches AND pr's
 							env.BASE_TAG                = "github-${BRANCH_LOWER}"
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
 							env.BUILDX_PUSH_TAGS_NODE   = "${BUILDX_PUSH_TAGS}-node"
 							env.BUILDX_PUSH_TAGS_GOLANG = "${BUILDX_PUSH_TAGS}-golang"
 						}
@@ -101,11 +101,11 @@ pipeline {
 			}
 			steps {
 				script {
-					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as:
+					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/nginxproxymanager/${IMAGE}) as:
 
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-node`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-golang`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-node`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-golang`
 """)
 				}
 			}
