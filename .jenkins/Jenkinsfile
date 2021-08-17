@@ -31,7 +31,6 @@ pipeline {
 							env.BASE_TAG                = 'latest'
 							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
 							env.BUILDX_PUSH_TAGS_NODE   = "-t docker.io/nginxproxymanager/${IMAGE}:node"
-							env.BUILDX_PUSH_TAGS_GOLANG = "-t docker.io/nginxproxymanager/${IMAGE}:golang"
 						}
 					}
 				}
@@ -47,7 +46,6 @@ pipeline {
 							env.BASE_TAG                = "github-${BRANCH_LOWER}"
 							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
 							env.BUILDX_PUSH_TAGS_NODE   = "${BUILDX_PUSH_TAGS}-node"
-							env.BUILDX_PUSH_TAGS_GOLANG = "${BUILDX_PUSH_TAGS}-golang"
 						}
 					}
 				}
@@ -66,17 +64,6 @@ pipeline {
 		}
 		stage('Other Builds') {
 			parallel {
-				stage('Golang') {
-					environment {
-						BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_golang"
-					}
-					steps {
-						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
-							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
-							sh "./scripts/buildx --push -f docker/Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
-						}
-					}
-				}
 				stage('Node') {
 					environment {
 						BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_node"
@@ -105,7 +92,6 @@ pipeline {
 
 - `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}`
 - `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-node`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-golang`
 """)
 				}
 			}
