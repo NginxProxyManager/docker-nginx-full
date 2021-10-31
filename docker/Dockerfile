@@ -37,7 +37,8 @@ RUN if [ "$(getconf LONG_BIT)" = "32" ]; then \
 	pip3 install --no-cache-dir -U cryptography==3.3.2; \
 	fi
 
-RUN pip install --no-cache-dir cffi certbot
+RUN pip install --no-cache-dir cffi certbot \
+	&& pip install tldextract
 
 #############
 # Nginx Builder
