@@ -19,7 +19,9 @@ This is a base image for use in other images. See Dockerfile for build steps.
 
 The following is compiled/installed:
 
-- OpenResty
+- libmaxminddb (used by ModSecurity)
+- ModSecurity (libmodsecurity)
+- OpenResty (with the ModSecurity-nginx module)
 - Lua
 - Certbot
 - Python3 and pip

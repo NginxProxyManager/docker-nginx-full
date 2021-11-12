@@ -11,6 +11,7 @@ echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...
 cd /tmp/openresty
 make install
 rm -rf /tmp/openresty
+rm -rf /tmp/modsecurity-nginx
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 
