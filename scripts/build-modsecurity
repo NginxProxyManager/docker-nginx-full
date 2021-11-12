@@ -9,12 +9,14 @@ RESET='\E[0m'
 echo -e "${BLUE}❯ ${CYAN}Building ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
 
 cd /tmp
-wget "https://github.com/SpiderLabs/ModSecurity/releases/download/v${MODSECURITY_VERSION}/modsecurity-v${MODSECURITY_VERSION}.tar.gz"
-tar -xzf modsecurity-v${MODSECURITY_VERSION}.tar.gz
-mv /tmp/modsecurity-v${MODSECURITY_VERSION} /tmp/modsecurity
+git clone --depth 1 --branch v${MODSECURITY_VERSION} https://github.com/SpiderLabs/ModSecurity.git modsecurity
 cd /tmp/modsecurity
 
 ./build.sh
+
+git submodule init
+git submodule update
+
 ./configure \
     --with-lmdb \
     --enable-parser-generation \

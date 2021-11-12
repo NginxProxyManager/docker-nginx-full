@@ -77,6 +77,7 @@ RUN apt-get update \
 	openssl unzip \
 	wget \
 	file \
+	git \
 	zlib1g-dev
 
 # Lua build
