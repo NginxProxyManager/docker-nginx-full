@@ -60,7 +60,8 @@ RUN apt-get update \
 	libssl-dev \
 	openssl unzip \
 	wget \
-	zlib1g-dev
+	zlib1g-dev \
+	git
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
@@ -133,11 +134,12 @@ RUN apt-get update \
 	gcc \
 	make \
 	socat \
+	git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
 	&& rm -f /tmp/install-lua \
 	&& rm -f /tmp/install-openresty \
-	&& apt-get remove -y make gcc \
+	&& apt-get remove -y make gcc git \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
