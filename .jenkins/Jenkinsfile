@@ -15,7 +15,7 @@ pipeline {
 		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}"
 		BRANCH_LOWER = "${BRANCH_NAME.toLowerCase().replaceAll('/', '-')}"
 		// Software versions; OpenResty does not support Lua >= 5.2
-		OPENRESTY_VERSION = '1.19.3.1'
+		OPENRESTY_VERSION = '1.19.9.1'
 		LUA_VERSION       = '5.1.5'
 		LUAROCKS_VERSION  = '3.3.1'
 	}
