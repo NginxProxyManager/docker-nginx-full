@@ -28,9 +28,12 @@ pipeline {
 					}
 					steps {
 						script {
-							env.BASE_TAG                = 'latest'
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
-							env.BUILDX_PUSH_TAGS_NODE   = "-t docker.io/nginxproxymanager/${IMAGE}:node"
+							env.BASE_TAG                       = 'latest'
+							env.BUILDX_PUSH_TAGS               = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS_ACMESH        = "-t docker.io/nginxproxymanager/${IMAGE}:acmesh"
+							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t docker.io/nginxproxymanager/${IMAGE}:certbot"
+							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t docker.io/nginxproxymanager/${IMAGE}:acmesh-golang"
+							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t docker.io/nginxproxymanager/${IMAGE}:certbot-node"
 						}
 					}
 				}
@@ -43,15 +46,20 @@ pipeline {
 					steps {
 						script {
 							// Defaults to the Branch name, which is applies to all branches AND pr's
-							env.BASE_TAG                = "github-${BRANCH_LOWER}"
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
-							env.BUILDX_PUSH_TAGS_NODE   = "${BUILDX_PUSH_TAGS}-node"
+							env.BASE_TAG                       = "github-${BRANCH_LOWER}"
+							env.ACMESH_BASE_TAG                = "github-${BRANCH_LOWER}-acmesh"
+							env.CERTBOT_BASE_TAG               = "github-${BRANCH_LOWER}-certbot"
+							env.BUILDX_PUSH_TAGS               = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS_ACMESH        = "${BUILDX_PUSH_TAGS}-acmesh"
+							env.BUILDX_PUSH_TAGS_CERTBOT       = "${BUILDX_PUSH_TAGS}-certbot"
+							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "${BUILDX_PUSH_TAGS}-acmesh-golang"
+							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "${BUILDX_PUSH_TAGS}-certbot-node"
 						}
 					}
 				}
 			}
 		}
-		stage('Base Build') {
+		stage('Base') {
 			environment {
 				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_base"
 			}
@@ -62,18 +70,27 @@ pipeline {
 				}
 			}
 		}
-		stage('Other Builds') {
-			parallel {
-				stage('Node') {
-					environment {
-						BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_node"
-					}
-					steps {
-						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
-							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
-							sh "./scripts/buildx --push -f docker/Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"
-						}
-					}
+		stage('Acme Clients') {
+			environment {
+				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_node"
+			}
+			steps {
+				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+					sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
+					sh "./scripts/buildx --push -f docker/Dockerfile.acmesh ${BUILDX_PUSH_TAGS_ACMESH}"
+					sh "./scripts/buildx --push -f docker/Dockerfile.certbot ${BUILDX_PUSH_TAGS_CERTBOT}"
+				}
+			}
+		}
+		stage('Dev Tools') {
+			environment {
+				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_node"
+			}
+			steps {
+				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+					sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
+					sh "./scripts/buildx --push -f docker/Dockerfile.acmesh-golang ${BUILDX_PUSH_TAGS_ACMESH_GOLANG}"
+					sh "./scripts/buildx --push -f docker/Dockerfile.certbot-node ${BUILDX_PUSH_TAGS_CERTBOT_NODE}"
 				}
 			}
 		}

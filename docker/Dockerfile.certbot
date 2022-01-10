@@ -1,0 +1,68 @@
+#############
+# Certbot Builder
+#############
+
+FROM debian:buster-slim as certbotbuilder
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN apt-get update
+RUN apt-get install -y \
+	build-essential \
+	curl \
+	libaugeas0 \
+	python3 \
+	python3-dev \
+	libffi-dev \
+	libssl-dev \
+	python3-venv \
+	ca-certificates
+
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+
+# Yes, python compilation requires rust.
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# It's all about pip now.
+RUN python3 -m venv /opt/certbot/
+ENV PATH="/opt/certbot/bin:$PATH"
+
+RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3
+
+# Handle an extremely specific issue when building the cryptography package for
+# 32-bit architectures within QEMU running on a 64-bit host
+# Special thanks to https://github.com/JonasAlfredsson/docker-nginx-certbot
+RUN if [ "$(getconf LONG_BIT)" = "32" ]; then \
+	pip3 install --no-cache-dir -U cryptography==3.3.2; \
+	fi
+
+RUN pip install --no-cache-dir cffi certbot \
+	&& pip install tldextract
+
+#############
+# Final Image
+#############
+
+FROM nginxproxymanager/nginx-full:${BASE_TAG:-latest}
+LABEL maintainer="Jamie Curnow <jc@jc21.com>"
+
+ARG TARGETPLATFORM
+RUN echo "Certbot: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+
+# OpenResty uses LuaJIT which has a dependency on GCC
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+	python3 \
+	python3-distutils \
+	python3-venv \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Copy certbot
+COPY --from=certbotbuilder /opt/certbot /opt/certbot
+RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
+	&& python3 -m venv /opt/certbot/ \
+	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:certbot"

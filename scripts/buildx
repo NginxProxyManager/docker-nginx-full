@@ -20,6 +20,8 @@ docker buildx build \
 	--progress plain \
 	--pull \
 	--build-arg BASE_TAG \
+	--build-arg ACMESH_BASE_TAG \
+	--build-arg CERTBOT_BASE_TAG \
 	--build-arg OPENRESTY_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \

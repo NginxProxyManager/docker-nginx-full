@@ -1,0 +1,14 @@
+FROM nginxproxymanager/nginx-full:${BASE_TAG:-latest}
+LABEL maintainer="Jamie Curnow <jc@jc21.com>"
+
+ARG TARGETPLATFORM
+RUN echo "Acme.sh: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+
+ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+# acme.sh
+RUN mkdir -p /data/acme.sh \
+	&& curl -o /bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh' \
+	&& chmod +x /bin/acme.sh
+
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:acmesh"
