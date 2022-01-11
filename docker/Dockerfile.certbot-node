@@ -11,7 +11,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
 	&& apt-get install -y gcc make g++ git nodejs \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& npm install -g yarn
+	&& npm install -g yarn \
+	&& ln -s /usr/bin/python3 /usr/bin/python
 
 # Check nodejs works on this architecture
 COPY ./files/test.js /tmp/test.js
