@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# Ensure acme.sh dirs exist
+mkdir -p "$ACMESH_HOME" "$ACMESH_CONFIG_HOME" "$CERT_HOME" "$LE_CONFIG_HOME" "$LE_WORKING_DIR"
+
+ACMESH_SCRIPT=/data/.acme.sh/acme.sh
+
+# Check for existence of $ACME_SH_SCRIPT
+if ! [ -f "$ACMESH_SCRIPT" ]; then
+	echo "$ACMESH_SCRIPT does not exist, installing acme.sh ..."
+	cd /tmp
+	./acme.sh --install --force --home "$ACMESH_HOME" --cert-home "$CERT_HOME" --config-home "$ACMESH_CONFIG_HOME"
+fi
+
+$ACMESH_SCRIPT --config-home "$ACMESH_CONFIG_HOME" "$@"
