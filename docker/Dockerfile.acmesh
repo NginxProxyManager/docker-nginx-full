@@ -6,6 +6,8 @@ RUN echo "Acme.sh: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLA
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
+COPY ./files/.bashrc.acmesh /root/.bashrc
+
 # acme.sh
 RUN mkdir -p /data/acme.sh \
 	&& curl -o /bin/acme.sh 'https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh' \

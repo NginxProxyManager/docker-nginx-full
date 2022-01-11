@@ -14,6 +14,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
 	&& npm install -g yarn \
 	&& ln -s /usr/bin/python3 /usr/bin/python
 
+COPY ./files/.bashrc.certbot-node /root/.bashrc
+
 # Check nodejs works on this architecture
 COPY ./files/test.js /tmp/test.js
 RUN node /tmp/test.js \

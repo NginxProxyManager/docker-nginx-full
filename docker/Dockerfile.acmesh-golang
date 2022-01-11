@@ -20,6 +20,8 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" \
 
 WORKDIR /root
 
+COPY ./files/.bashrc.acmesh-golang /root/.bashrc
+
 # Gotools
 RUN if [ "$TARGETPLATFORM" == "" ] || [ "$TARGETPLATFORM" == "linux/amd64" ]; then cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.39.0; fi
 RUN go get -u github.com/kyoh86/richgo \

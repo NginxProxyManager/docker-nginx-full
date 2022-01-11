@@ -59,6 +59,8 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
+COPY ./files/.bashrc.certbot /root/.bashrc
+
 # Copy certbot
 COPY --from=certbotbuilder /opt/certbot /opt/certbot
 RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
