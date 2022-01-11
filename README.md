@@ -52,3 +52,12 @@ FROM nginxproxymanager/nginx-full:latest
 
 ...
 ```
+
+#### Acme.sh Example
+
+```
+docker run \
+  -v /path/to/local/acme-data:/data/.acme.sh \
+  nginxproxymanager/nginx-full:acmesh \
+  acme.sh -h
+```
