@@ -13,7 +13,14 @@ RUN apt-get update \
 # copy go from golang
 COPY --from=go /usr/local/go /usr/local/go
 
-ENV GOPATH=/opt/go PATH="/usr/local/go/bin:$PATH:/opt/go/bin"
+ENV GOPATH=/opt/go \
+	PATH="/usr/local/go/bin:$PATH:/opt/go/bin" \
+	ACMESH_CONFIG_HOME=/data/.acme.sh/config \
+	ACMESH_HOME=/data/.acme.sh \
+	CERT_HOME=/data/.acme.sh/certs \
+	LE_CONFIG_HOME=/data/.acme.sh/config \
+	LE_WORKING_DIR=/data/.acme.sh
+
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" \
 	&& chmod -R 777 "$GOPATH" \
 	&& echo "====> ${TARGETPLATFORM}: $(go version)"
