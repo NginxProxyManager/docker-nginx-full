@@ -1,7 +1,7 @@
 # nginx-full
 
 <p>
-  <img src="https://img.shields.io/badge/openresty-1.19.3.1-green.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/openresty-1.19.9.1-green.svg?style=for-the-badge">
   <img src="https://img.shields.io/badge/lua-5.1.5-green.svg?style=for-the-badge">
   <img src="https://img.shields.io/badge/luarocks-3.3.1-green.svg?style=for-the-badge">
   <a href="https://hub.docker.com/repository/docker/nginxproxymanager/nginx-full">
@@ -17,16 +17,29 @@
 
 This is a base image for use in other images. See Dockerfile for build steps.
 
-The following is compiled/installed:
+The following images are built:
 
-- libmaxminddb (used by ModSecurity)
-- ModSecurity (libmodsecurity)
-- OpenResty (with the ModSecurity-nginx module)
+**latest**
+- OpenResty
 - Lua
+
+**certbot**
 - Certbot
 - Python3 and pip
 
-The following architectures are supported:
+**acmesh** _(used in Nginx Proxy Manager v3)_
+- Acme.sh
+
+**certbot-node** _(used in Nginx Proxy Manager v2)_
+- Certbot
+- Python3 and pip
+- Nodejs
+
+**acmesh-golang** _(development for Nginx Proxy Manager v3)_
+- Acme.sh
+- Golang
+
+The following architectures are supported for all images:
 
 - amd64
 - arm/v7
@@ -35,7 +48,16 @@ The following architectures are supported:
 ### Usage:
 
 ```
-FROM nginxproxymanager/nginx-full
+FROM nginxproxymanager/nginx-full:latest
 
 ...
+```
+
+#### Acme.sh Example
+
+```
+docker run \
+  -v /path/to/local/acme-data:/data/.acme.sh \
+  nginxproxymanager/nginx-full:acmesh \
+  acme.sh -h
 ```

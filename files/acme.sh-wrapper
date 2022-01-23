@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+# Ensure env vars are set
+if [ "$ACMESH_HOME" = "" ]; then
+	echo "Error: ACMESH_HOME is not set!"
+	exit 1
+fi
+if [ "$ACMESH_CONFIG_HOME" = "" ]; then
+	echo "Error: ACMESH_CONFIG_HOME is not set!"
+	exit 1
+fi
+if [ "$CERT_HOME" = "" ]; then
+	echo "Error: CERT_HOME is not set!"
+	exit 1
+fi
+if [ "$LE_CONFIG_HOME" = "" ]; then
+	echo "Error: LE_CONFIG_HOME is not set!"
+	exit 1
+fi
+if [ "$LE_WORKING_DIR" = "" ]; then
+	echo "Error: LE_WORKING_DIR is not set!"
+	exit 1
+fi
+
+# Ensure acme.sh dirs exist
+mkdir -p "$ACMESH_HOME" "$ACMESH_CONFIG_HOME" "$CERT_HOME" "$LE_CONFIG_HOME" "$LE_WORKING_DIR"
+
+ACMESH_SCRIPT=/data/.acme.sh/acme.sh
+
+# Check for existence of $ACME_SH_SCRIPT
+if ! [ -f "$ACMESH_SCRIPT" ]; then
+	echo "$ACMESH_SCRIPT does not exist, installing acme.sh ..."
+	cd /tmp
+	./acme.sh --install --force --home "$ACMESH_HOME" --cert-home "$CERT_HOME" --config-home "$ACMESH_CONFIG_HOME"
+fi
+
+$ACMESH_SCRIPT --config-home "$ACMESH_CONFIG_HOME" "$@"
