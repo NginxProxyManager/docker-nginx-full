@@ -31,7 +31,7 @@ ACMESH_SCRIPT=/data/.acme.sh/acme.sh
 if ! [ -f "$ACMESH_SCRIPT" ]; then
 	echo "$ACMESH_SCRIPT does not exist, installing acme.sh ..."
 	cd /tmp
-	./acme.sh --install --no-cron --no-profile --force --home "$ACMESH_HOME" --cert-home "$CERT_HOME" --config-home "$ACMESH_CONFIG_HOME"
+	./acme.sh --install-online --no-cron --no-profile --force --home "$ACMESH_HOME" --cert-home "$CERT_HOME" --config-home "$ACMESH_CONFIG_HOME"
 fi
 
 $ACMESH_SCRIPT --config-home "$ACMESH_CONFIG_HOME" "$@"
