@@ -10,8 +10,13 @@ RESET='\E[0m'
 # Install Crowdsec OpenResty Bouncer.
 mkdir -p /crowdsec/
 cd /tmp
-echo "${BLUE}❯ ${CYAN}Installing CrowdSec OpenResty-Bouncer ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
+# Download the CrowdSec OpenResty Bouncer package.
+echo -e "${BLUE}❯ ${CYAN}Downloading CrowdSec Openresty Bouncer package ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
+mkdir -p crowdsec-openresty-bouncer
+curl -# -L ${CROWDSEC_OPENRESTY_BOUNCER_URL} | tar xz --strip 1 -C crowdsec-openresty-bouncer
+echo -e "${BLUE}❯ ${CYAN}Installing CrowdSec OpenResty-Bouncer ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
 cp /tmp/crowdsec-openresty-bouncer/openresty/crowdsec_openresty.conf /crowdsec/crowdsec_openresty.conf
+chmod +x /usr/bin/sed-patch
 sed-patch 's|/etc/crowdsec/bouncers/crowdsec-openresty-bouncer.conf|/data/crowdsec/crowdsec-openresty-bouncer.conf|' /crowdsec/crowdsec_openresty.conf
 sed-patch 's|/usr/local/openresty/lualib/plugins/crowdsec|/etc/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf
 sed-patch 's|$prefix/../lualib/plugins/crowdsec|/etc/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf

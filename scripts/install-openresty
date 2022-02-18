@@ -10,8 +10,18 @@ echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...
 
 cd /tmp/openresty
 make install
+cd ..
 rm -rf /tmp/openresty
-
+# MaxMind DB
+cd libmaxminddb
+./configure \
+    --prefix=/usr \
+    --mandir=/tmp/libmaxminddb-man \
+    --with-pic \
+    --enable-shared=yes \
+    --enable-static=yes
+make -j"$(nproc)" install
+cd ..
 echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
@@ -21,5 +31,7 @@ luarocks install lua-cjson
 luarocks install lua-resty-openidc
 # Crowdsec needs lua-resty-http
 luarocks install lua-resty-http
+#/etc/lib/nginx/bin/opm get pintsized/lua-resty-http
+
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"
