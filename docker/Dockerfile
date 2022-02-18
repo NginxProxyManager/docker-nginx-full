@@ -8,7 +8,8 @@ ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
-ARG CROWDSEC_OPENRESTY_BOUNCER_URL
+ARG CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
+
 
 RUN apt-get update \
 	&& apt-get install -y \
