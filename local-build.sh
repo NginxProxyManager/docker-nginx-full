@@ -11,6 +11,10 @@ DOCKER_IMAGE=nginxproxymanager/nginx-full
 export OPENRESTY_VERSION=1.19.9.1
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
+# baudneo - crowdsec openresty
+export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
+export CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
+
 
 # Builds
 
@@ -20,6 +24,8 @@ docker build \
 	--build-arg OPENRESTY_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
+	--build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
+	--build-arg CROWDSEC_OPENRESTY_BOUNCER_URL \
 	-t ${DOCKER_IMAGE}:latest \
 	-f docker/Dockerfile \
 	.

@@ -19,5 +19,7 @@ echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
 cd /
 luarocks install lua-cjson
 luarocks install lua-resty-openidc
+# Crowdsec needs lua-resty-http
+luarocks install lua-resty-http
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"

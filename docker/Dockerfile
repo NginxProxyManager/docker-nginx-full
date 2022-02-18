@@ -7,6 +7,8 @@ FROM debian:buster-slim as nginxbuilder
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
+ARG CROWDSEC_OPENRESTY_BOUNCER_URL
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -28,6 +30,10 @@ RUN /tmp/build-lua
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
 RUN /tmp/build-openresty
+
+# CrowdSec OpenResty-Bouncer download
+COPY ./scripts/build-crowdsec-openresty-bouncer /tmp/build-crowdsec-openresty-bouncer
+RUN /tmp/build-crowdsec-openresty-bouncer
 
 #############
 # Final Image
@@ -72,15 +78,20 @@ COPY ./scripts/install-lua /tmp/install-lua
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
 
+# Copy crowdsec openresty bouncer from first image
+COPY --from=nginxbuilder /tmp/crowdsec-openresty-bouncer /tmp/crowdsec-openresty-bouncer
+COPY ./scripts/install-crowdsec-openresty-bouncer /tmp/install-crowdsec-openresty-bouncer
+
 ARG OPENRESTY_VERSION
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 	OPENRESTY_VERSION=${OPENRESTY_VERSION}
 
-# Install openresty, lua, then clean up file system
+# Install openresty, lua, crowdsec openresty bouncer then clean up file system
 RUN apt-get update \
 	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
+	&& /tmp/install-crowdsec-openresty-bouncer \
 	&& apt-get remove -y make gcc git \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
