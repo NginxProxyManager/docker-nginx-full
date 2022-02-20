@@ -52,13 +52,10 @@ RUN apt-get update \
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
-# libmaxminddb build
-COPY ./scripts/build-libmaxminddb /tmp/build-libmaxminddb
-RUN /tmp/build-libmaxminddb
-
 # Modsecurity build
 COPY ./scripts/build-modsecurity /tmp/build-modsecurity
 RUN /tmp/build-modsecurity
+
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
 RUN /tmp/build-openresty
@@ -116,7 +113,6 @@ COPY ./scripts/install-lua /tmp/install-lua
 
 #Copy libmaxminddb build from first image
 COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb
-COPY ./scripts/install-libmaxminddb /tmp/install-libmaxminddb
 
 # Copy Modsecurity build from first image
 COPY --from=nginxbuilder /usr/local/modsecurity /usr/local/modsecurity
