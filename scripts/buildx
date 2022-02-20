@@ -6,7 +6,7 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Building docker multiarch: ${YELLOW}${*}${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building docker multi-arch: ${YELLOW}${*}${RESET}"
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${DIR}/.."
@@ -26,11 +26,13 @@ docker buildx build \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
 	--build-arg NGINX_HTTP_GEOIP2_MODULE_VERSION \
-  --build-arg LIBMAXMINDDB_VERSION \
+  --build-arg MAXMINDDB_VERSION \
   --build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
+  --build-arg MODSECURITY_VERSION \
+  --build-arg MODSECURITY_NGINX_VERSION \
 	"$@" \
 	.
 
 docker buildx rm "${BUILDX_NAME:-nginx-full}"
 
-echo -e "${BLUE}❯ ${GREEN}Multiarch build Complete${RESET}"
+echo -e "${BLUE}❯ ${GREEN}Multi-arch build Complete${RESET}"

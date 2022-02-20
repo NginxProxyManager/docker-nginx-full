@@ -10,21 +10,41 @@ ARG LUA_VERSION
 ARG LUAROCKS_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION
-ARG LIBMAXMINDDB_VERSION
+ARG MAXMINDDB_VERSION
 ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
-ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${LIBMAXMINDDB_VERSION}/libmaxminddb-${LIBMAXMINDDB_VERSION}.tar.gz
+ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${MAXMINDDB_VERSION}/libmaxminddb-${MAXMINDDB_VERSION}.tar.gz
+# modsecurity
+ARG MODSECURITY_VERSION
+ARG MODSECURITY_NGINX_VERSION
+ARG MODSECURITY_NGINX_URL=https://github.com/SpiderLabs/ModSecurity-nginx/releases/download/v${MODSECURITY_NGINX_VERSION}/modsecurity-nginx-v${MODSECURITY_NGINX_VERSION}.tar.gz
+ARG MODSECURITY_GIT_URL=https://github.com/SpiderLabs/ModSecurity.git
 
 RUN apt-get update \
         && apt-get install -y \
         build-essential \
+        automake \
+        pkg-config \
+        libtool \
+        flex \
+        bison \
         ca-certificates \
         libncurses-dev \
         perl \
         libpcre3-dev \
         libreadline-dev \
         libssl-dev \
+        libyajl-dev \
+        libpcre3-dev \
+        libxml2-dev \
+        libcurl4-gnutls-dev \
+        libgeoip-dev \
+        liblmdb-dev \
+        libfuzzy-dev \
+        liblua5.1-0-dev \
         openssl unzip \
-        wget curl \
+        wget \
+        curl \
+        file \
         zlib1g-dev \
         git
 
@@ -32,6 +52,13 @@ RUN apt-get update \
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
+# libmaxminddb build
+COPY ./scripts/build-libmaxminddb /tmp/build-libmaxminddb
+RUN /tmp/build-libmaxminddb
+
+# Modsecurity build
+COPY ./scripts/build-modsecurity /tmp/build-modsecurity
+RUN /tmp/build-modsecurity
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
 RUN /tmp/build-openresty
@@ -68,6 +95,14 @@ RUN apt-get update \
         tzdata \
         unzip \
         zlib1g \
+        libyajl2 \
+        libpcre3 \
+        libxml2 \
+        libcurl3-gnutls \
+        libgeoip1 \
+        liblmdb0 \
+        libfuzzy2 \
+        liblua5.1-0 \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/* \
         && rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
@@ -78,6 +113,13 @@ COPY ./files/.bashrc /root/.bashrc
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
 COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
 COPY ./scripts/install-lua /tmp/install-lua
+
+#Copy libmaxminddb build from first image
+COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb
+COPY ./scripts/install-libmaxminddb /tmp/install-libmaxminddb
+
+# Copy Modsecurity build from first image
+COPY --from=nginxbuilder /usr/local/modsecurity /usr/local/modsecurity
 
 # Copy openresty build from first image
 COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb

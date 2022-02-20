@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
+export BLUE='\E[1;34m'
+export CYAN='\E[1;36m'
+export YELLOW='\E[1;33m'
+export GREEN='\E[1;32m'
+export RESET='\E[0m'
 
 DOCKER_IMAGE=baudneo/nginx-full
 
@@ -12,10 +12,13 @@ export OPENRESTY_VERSION=1.19.9.1
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
 export NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
-export LIBMAXMINDDB_VERSION=1.5.0
-
-# baudneo - crowdsec openresty
+# needed for GeoIP2 and modsecurity
+export MAXMINDDB_VERSION=1.6.0
+# crowdsec openresty bouncer
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
+#modsecurity
+export MODSECURITY_VERSION=3.0.6
+export MODSECURITY_NGINX_VERSION=1.0.2
 
 
 # Builds
@@ -28,7 +31,9 @@ docker build \
         --build-arg LUAROCKS_VERSION \
         --build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
         --build-arg NGINX_HTTP_GEOIP2_MODULE_VERSION \
-        --build-arg LIBMAXMINDDB_VERSION \
+        --build-arg MAXMINDDB_VERSION \
+        --build-arg MODSECURITY_VERSION \
+        --build-arg MODSECURITY_NGINX_VERSION \
         -t ${DOCKER_IMAGE}:latest \
         -f docker/Dockerfile \
         .

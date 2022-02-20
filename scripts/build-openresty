@@ -6,7 +6,7 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION} ${CYAN}with ModSecurity-nginx ${YELLOW}${MODSECURITY_NGINX_VERSION}...${RESET}"
 
 cd /tmp
 # HTTP GeoIP2 module
@@ -14,10 +14,10 @@ echo -e "${BLUE}❯ ${CYAN}Downloading HTTP GeoIP2 module ${YELLOW}${NGINX_HTTP_
 mkdir ngx_http_geoip2_module
 curl -# -L "${NGINX_HTTP_GEOIP2_MODULE_URL}" | tar xz --strip 1 -C ngx_http_geoip2_module
 # MaxMind DB
-echo -e "${BLUE}❯ ${CYAN}Downloading lib-maxmind_db...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Downloading maxmind_db...${RESET}"
 mkdir libmaxminddb
 curl -# -L "${LIBMAXMINDDB_URL}" | tar xz --strip 1 -C libmaxminddb
-echo -e "${BLUE}❯ ${CYAN}Compiling lib-maxmind_db ${YELLOW}${LIBMAXMINDDB_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Configuring lib-maxmind_db ${YELLOW}${MAXMINDDB_VERSION}...${RESET}"
 cd libmaxminddb
 ./configure \
     --prefix=/usr \
@@ -25,8 +25,15 @@ cd libmaxminddb
     --with-pic \
     --enable-shared=yes \
     --enable-static=yes
+make
+make check
 make install
+ldconfig
+
 cd ..
+
+# modsecurity
+curl -# -L  "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
 
 # OpenResty
 mkdir openresty
@@ -82,7 +89,8 @@ cd /tmp/openresty
         --with-stream \
         --with-stream_realip_module \
         --with-stream_ssl_module \
-        --with-stream_ssl_preread_module
+        --with-stream_ssl_preread_module \
+	      --add-module=/tmp/modsecurity-nginx
 
 make -j2
 

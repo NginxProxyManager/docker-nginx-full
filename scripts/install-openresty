@@ -12,16 +12,11 @@ cd /tmp/openresty
 make install
 cd ..
 rm -rf /tmp/openresty
+rm -rf /tmp/modsecurity-nginx
 # MaxMind DB
 cd libmaxminddb
-./configure \
-    --prefix=/usr \
-    --mandir=/tmp/libmaxminddb-man \
-    --with-pic \
-    --enable-shared=yes \
-    --enable-static=yes
-make -j"$(nproc)" install
-cd ..
+make install
+ldconfig
 echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
