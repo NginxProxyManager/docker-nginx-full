@@ -1,8 +1,12 @@
-FROM ${DOCKER_IMAGE:-nginx-proxy-manager}:${BASE_TAG:-latest}
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
+
+FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 ARG TARGETPLATFORM
-RUN echo "Acme.sh: ${DOCKER_IMAGE:-nginxproxymanager}:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Acme.sh: ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 

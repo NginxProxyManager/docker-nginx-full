@@ -1,4 +1,9 @@
 FROM golang:latest as go
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
+ARG TARGET_PLATFORM
+
 FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${ACMESH_BASE_TAG:-acmesh}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 

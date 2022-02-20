@@ -4,6 +4,11 @@
 
 FROM debian:buster-slim as nginxbuilder
 
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
+ARG REPO_OWNER
+
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
@@ -71,10 +76,11 @@ RUN /tmp/build-openresty
 #############
 
 FROM debian:buster-slim
-LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
+ARG REPO_OWNER
 ARG TARGETPLATFORM
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
@@ -84,6 +90,10 @@ ARG OPENRESTY_VERSION
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
 ARG MODSECURITY_NGINX_VERSION
+
+LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN echo "Base: debian:buster-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
@@ -164,4 +174,4 @@ LABEL org.label-schema.schema-version="1.0" \
         org.label-schema.description="A base image for use by Nginx Proxy Manager with CrowdSec, GeoIP2 and ModSecurity" \
         org.label-schema.url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full" \
         org.label-schema.vcs-url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full.git" \
-        org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager}:${BASE_TAG:-latest}"
+        org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}"

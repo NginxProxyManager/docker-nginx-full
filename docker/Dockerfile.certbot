@@ -3,6 +3,9 @@
 #############
 
 FROM debian:buster-slim as certbotbuilder
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -44,6 +47,9 @@ RUN pip install cryptography==2.8 \
 #############
 # Final Image
 #############
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG MAINTAINER
 
 FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"

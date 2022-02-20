@@ -9,6 +9,7 @@ export RESET='\E[0m'
 DOCKER_IMAGE=baudneo/nginx-full
 MAINTAINER="baudneo <baudneo@protonmail.com>"
 REPO_OWNER="baudneo"
+BASE_TAG='cs-modsec'
 
 export OPENRESTY_VERSION=1.19.9.1
 export LUA_VERSION=5.1.5
@@ -24,7 +25,6 @@ export MODSECURITY_NGINX_VERSION=1.0.2
 export CRS_VERSION=3.3.2
 
 # Builds
-BASE_TAG='cs-modsec'
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}${BASE_TAG} ${CYAN}...${RESET}"
 docker build \
         --pull \
@@ -47,6 +47,8 @@ docker build \
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}acmesh ${CYAN}...${RESET}"
 docker build \
+        --build-arg DOCKER_IMAGE \
+        --build-arg MAINTAINER \
         --build-arg BASE_TAG \
         -t ${DOCKER_IMAGE}:acmesh \
         -f docker/Dockerfile.acmesh \
