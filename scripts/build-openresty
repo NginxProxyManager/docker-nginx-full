@@ -33,6 +33,7 @@ ldconfig
 cd ..
 
 # modsecurity
+mkdir /tmp/modsecurity-nginx
 curl -# -L  "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
 
 # OpenResty
