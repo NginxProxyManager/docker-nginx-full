@@ -1,14 +1,9 @@
-ARG DOCKER_IMAGE
-ARG BASE_TAG
-ARG MAINTAINER
+FROM baudneo/nginx-full:${BASE_TAG:-latest}
+LABEL maintainer="baudneo <baudneo@protonmail.com>"
 
-
-RUN echo "docker image = $DOCKER_IMAGE - base tag = $BASE_TAG - maintainer = $MAINTAINER"
-FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}
-LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 ARG TARGETPLATFORM
-RUN echo "Acme.sh: ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Acme.sh: baudneo/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
@@ -30,4 +25,4 @@ COPY ./files/acme.sh-wrapper /bin/acme.sh
 # Test that the wrapper script is working
 RUN /bin/acme.sh -h
 
-LABEL org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:acmesh"
+LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:acmesh"

@@ -3,11 +3,6 @@
 #############
 
 FROM debian:buster-slim as certbotbuilder
-ARG DOCKER_IMAGE
-ARG BASE_TAG
-ARG MAINTAINER
-RUN echo "docker image = $DOCKER_IMAGE - base tag = $BASE_TAG - maintainer = $MAINTAINER - target platform = $TARGET_PLATFORM"
-
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update
@@ -52,11 +47,11 @@ ARG DOCKER_IMAGE
 ARG BASE_TAG
 ARG MAINTAINER
 
-FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}
+FROM baudneo/nginx-full:${BASE_TAG:-latest}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 ARG TARGETPLATFORM
-RUN echo "Certbot: ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Certbot: baudneo/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apt-get update \
@@ -75,4 +70,4 @@ RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
 	&& python3 -m venv /opt/certbot/ \
 	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
-LABEL org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:certbot"
+LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:certbot"

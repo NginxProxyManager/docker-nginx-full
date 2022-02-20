@@ -1,13 +1,7 @@
 FROM golang:latest as go
-ARG DOCKER_IMAGE
-ARG BASE_TAG
-ARG MAINTAINER
-ARG TARGET_PLATFORM
 
-RUN echo "docker image = $DOCKER_IMAGE - base tag = $BASE_TAG - maintainer = $MAINTAINER - target platform = $TARGET_PLATFORM"
-
-FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${ACMESH_BASE_TAG:-acmesh}
-LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
+FROM baudneo/nginx-full:${ACMESH_BASE_TAG:-acmesh}
+LABEL maintainer="baudneo <baudneo@protonmail.com>"
 
 ARG TARGETPLATFORM
 RUN echo "Golang: ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-acmesh}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
