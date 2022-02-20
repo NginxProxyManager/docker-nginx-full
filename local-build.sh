@@ -19,7 +19,7 @@ export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
 #modsecurity
 export MODSECURITY_VERSION=3.0.6
 export MODSECURITY_NGINX_VERSION=1.0.2
-
+export CRS_VERSION=3.3.2
 
 # Builds
 
@@ -34,6 +34,7 @@ docker build \
         --build-arg MAXMINDDB_VERSION \
         --build-arg MODSECURITY_VERSION \
         --build-arg MODSECURITY_NGINX_VERSION \
+        --build-arg CRS_VERSION \
         -t ${DOCKER_IMAGE}:latest \
         -f docker/Dockerfile \
         .

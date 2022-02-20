@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+# MaxMind DB
+echo -e "${BLUE}❯ ${CYAN}Building MaxMind DB ${YELLOW}${MAXMINDDB_VERSION}...${RESET}"
+mkdir /tmp/libmaxminddb
+curl -# -L "${LIBMAXMINDDB_URL}" | tar xz --strip 1 -C /tmp/libmaxminddb
+cd /tmp/libmaxminddb
+./configure \
+    --prefix=/usr \
+    --mandir=/tmp/libmaxminddb-man \
+    --with-pic \
+    --enable-shared=yes \
+    --enable-static=yes
+make
+make check
+make install
+ldconfig
+
+echo -e "${BLUE}❯ ${GREEN}MindMax build completed${RESET}"

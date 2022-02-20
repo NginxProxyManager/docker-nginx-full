@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+
+echo -e "${BLUE}❯ ${CYAN}Installing MaxMind DB ${YELLOW}${MAXMINDDB_VERSION}...${RESET}"
+
+# MaxMind DB (GeoIP2 is already linked from ./configure)
+cd /tmp/libmaxminddb
+make install
+ldconfig
+# ModSecurity
+echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
+
+echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
+cd /tmp/modsecurity
+make install
+mkdir -p /etc/nginx/modules/
+mkdir -p /data/modsec/ruleset
+cp /tmp/modsecurity/modsecurity.conf-recommended /data/modsec/modsecurity.conf
+cp /tmp/modsecurity/unicode.mapping /data/modsec/
+sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /data/modsec/modsecurity.conf
+
+ln -sf /data/modsec /etc/nginx
+cat <<EOF > /data/modsec/main.conf
+Include /etc/nginx/modsec/modsecurity.conf
+Include /etc/nginx/modsec/ruleset/crs-setup.conf
+Include /etc/nginx/modsec/ruleset/rules/*.conf
+EOF
+
+echo -e "${BLUE}❯ ${GREEN}ModSecurity install completed${RESET}"
+
+echo -e "${BLUE}❯ ${CYAN}Installing OWASP-CoreRuleSet ${YELLOW}${CRS_VERSION}...${RESET}"
+
+curl -# -L "https://codeload.github.com/coreruleset/coreruleset/tar.gz/refs/tags/v${CRS_VERSION}" | tar xz --strip 1 -C /data/modsec/ruleset
+mv /data/modsec/ruleset/crs-setup.conf.example /data/modsec/ruleset/crs-setup.conf
+
+echo -e "${BLUE}❯ ${GREEN}OWASP-CoreRuleSet install completed${RESET}"

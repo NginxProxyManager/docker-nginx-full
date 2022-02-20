@@ -14,6 +14,7 @@ ARG MAXMINDDB_VERSION
 ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
 ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${MAXMINDDB_VERSION}/libmaxminddb-${MAXMINDDB_VERSION}.tar.gz
 # modsecurity
+ARG CRS_VERSION
 ARG MODSECURITY_VERSION
 ARG MODSECURITY_NGINX_VERSION
 ARG MODSECURITY_NGINX_URL=https://github.com/SpiderLabs/ModSecurity-nginx/releases/download/v${MODSECURITY_NGINX_VERSION}/modsecurity-nginx-v${MODSECURITY_NGINX_VERSION}.tar.gz
@@ -52,6 +53,10 @@ RUN apt-get update \
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
+# MindMax DB
+COPY ./scripts/build-mindmaxdb /tmp/build-mindmaxdb
+RUN /tmp/build-mindmaxdb
+
 # Modsecurity build
 COPY ./scripts/build-modsecurity /tmp/build-modsecurity
 RUN /tmp/build-modsecurity
@@ -72,6 +77,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG TARGETPLATFORM
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
+ARG NGINX_HTTP_GEOIP2_MODULE_VERSION
+ARG MAXMINDDB_VERSION
+ARG OPENRESTY_VERSION
+ARG CRS_VERSION
+ARG MODSECURITY_VERSION
+ARG MODSECURITY_NGINX_VERSION
 
 RUN echo "Base: debian:buster-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
@@ -105,46 +116,43 @@ RUN apt-get update \
         && rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
 
 COPY ./files/.bashrc /root/.bashrc
+COPY ./files/sed-patch /usr/bin
 
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
 COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
 COPY ./scripts/install-lua /tmp/install-lua
 
+# Copy openresty build from first image with modules
 #Copy libmaxminddb build from first image
 COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb
-
-# Copy Modsecurity build from first image
-COPY --from=nginxbuilder /usr/local/modsecurity /usr/local/modsecurity
-
-# Copy openresty build from first image
-COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb
 COPY --from=nginxbuilder /tmp/ngx_http_geoip2_module /tmp/ngx_http_geoip2_module
+# Copy Modsecurity build from first image
+COPY --from=nginxbuilder /tmp/modsecurity /tmp/modsecurity
+COPY --from=nginxbuilder /tmp/modsecurity-nginx /tmp/modsecurity-nginx
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
-
-# Copy crowdsec openresty bouncer sed-patch and install script
-COPY ./files/sed-patch /usr/bin
+COPY ./scripts/install-modsecurity /tmp/install-modsecurity
+# Copy crowdsec openresty bouncer install script
 COPY ./scripts/install-crowdsec-openresty-bouncer /tmp/install-crowdsec-openresty-bouncer
-
-ARG OPENRESTY_VERSION
 
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
         OPENRESTY_VERSION=${OPENRESTY_VERSION} \
-        CROWDSEC_BOUNCER=0 \
-         ADMIN_PANEL_LOG=0
+        CROWDSEC_BOUNCER="0" \
+         ADMIN_PANEL_LOG="0"
 
 # Install openresty, lua, crowdsec openresty bouncer then clean up file system
 RUN apt-get update \
         && apt-get install -y gcc make socat git \
         && /tmp/install-lua \
+        && /tmp/install-modsecurity \
         && /tmp/install-openresty \
         && /tmp/install-crowdsec-openresty-bouncer \
         && apt-get remove -y make gcc git \
         && apt-get autoremove -y \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/* \
-        && rm -rf /var/cache/* /var/log/* /var/lib/dpkg/status-old
+        && rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
 
 LABEL org.label-schema.schema-version="1.0" \
         org.label-schema.license="MIT" \

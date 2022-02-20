@@ -30,6 +30,8 @@ docker buildx build \
   --build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
   --build-arg MODSECURITY_VERSION \
   --build-arg MODSECURITY_NGINX_VERSION \
+  --build-arg CRS_VERSION \
+
 	"$@" \
 	.
 

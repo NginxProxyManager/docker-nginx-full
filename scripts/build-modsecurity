@@ -8,8 +8,11 @@ RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Building ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
 
-cd /tmp
-git clone --depth 1 --branch v"${MODSECURITY_VERSION}" "${MODSECURITY_GIT_URL}" modsecurity
+# modsecurity
+mkdir /tmp/modsecurity-nginx
+curl -# -L  "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
+
+git clone --depth 1 --branch v"${MODSECURITY_VERSION}" "${MODSECURITY_GIT_URL}" /tmp/modsecurity
 cd /tmp/modsecurity
 
 ./build.sh
