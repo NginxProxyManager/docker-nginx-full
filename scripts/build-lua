@@ -10,7 +10,7 @@ echo -e "${BLUE}❯ ${CYAN}Building Lua ${YELLOW}${LUA_VERSION}...${RESET}"
 
 cd /tmp
 mkdir lua
-curl -# -L "http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz" | tar -xzf --strip 1 -C /tmp/lua
+curl -# -L "http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz" | tar -xz --strip 1 -C /tmp/lua
 cd /tmp/lua
 make linux test
 # We have to install Lua for the Luarocks build to succeed, it will be installed again when building the final image
@@ -21,7 +21,7 @@ echo -e "${BLUE}❯ ${CYAN}Building Luarocks ${YELLOW}${LUAROCKS_VERSION}...${RE
 
 cd /tmp
 mkdir luarocks
-curl -# -L "https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz" | tar -xzf --strip 1 -C /tmp/luarocks
+curl -# -L "https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz" | tar -xz --strip 1 -C /tmp/luarocks
 cd /tmp/luarocks
 ./configure
 make
