@@ -35,6 +35,8 @@ cd /tmp/openresty
         --with-perl_modules_path=/usr/lib/perl5/vendor_perl \
         \
         --add-module=/tmp/ngx_http_geoip2_module \
+        --add-module=/tmp/modsecurity-nginx \
+        \
         --user=nginx \
         --group=nginx \
         --with-compat \
@@ -68,8 +70,7 @@ cd /tmp/openresty
         --with-stream \
         --with-stream_realip_module \
         --with-stream_ssl_module \
-        --with-stream_ssl_preread_module \
-	      --add-dynamic-module=/tmp/modsecurity-nginx
+        --with-stream_ssl_preread_module
 
 make -j2
 

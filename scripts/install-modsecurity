@@ -17,12 +17,12 @@ ldconfig
 echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
-cd /tmp/modsecurity
-make install
+
+# pre built modsecurity is in /usr/local/modsecurity
 mkdir -p /etc/nginx/modules/
 mkdir -p /data/modsec/ruleset
-cp /tmp/modsecurity/modsecurity.conf-recommended /data/modsec/modsecurity.conf
-cp /tmp/modsecurity/unicode.mapping /data/modsec/
+cp /tmp/config/modsecurity.conf /data/modsec
+cp /tmp/config/unicode.mapping /data/modsec
 sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /data/modsec/modsecurity.conf
 
 ln -sf /data/modsec /etc/nginx

@@ -9,8 +9,8 @@ RESET='\E[0m'
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
 cd /tmp/openresty
 make install
+find /tmp/openresty/build *module.so
 find /tmp/openresty/build *module.so -exec cp '{}' /etc/openresty/nginx/modules/ \;
-
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 
@@ -21,7 +21,6 @@ luarocks install lua-cjson
 luarocks install lua-resty-openidc
 # Crowdsec needs lua-resty-http
 luarocks install lua-resty-http
-#/etc/lib/nginx/bin/opm get pintsized/lua-resty-http
 
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"

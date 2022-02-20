@@ -127,9 +127,12 @@ COPY ./scripts/install-lua /tmp/install-lua
 #Copy libmaxminddb build from first image
 COPY --from=nginxbuilder /tmp/libmaxminddb /tmp/libmaxminddb
 COPY --from=nginxbuilder /tmp/ngx_http_geoip2_module /tmp/ngx_http_geoip2_module
+# Copy Modsecurity config files from first image
+COPY --from=nginxbuilder /tmp/configs /tmp/configs
 # Copy Modsecurity build from first image
-COPY --from=nginxbuilder /tmp/modsecurity /tmp/modsecurity
+COPY --from=nginxbuilder /usr/local/modsecurity /usr/local/modsecurity
 COPY --from=nginxbuilder /tmp/modsecurity-nginx /tmp/modsecurity-nginx
+
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
 COPY ./scripts/install-modsecurity /tmp/install-modsecurity

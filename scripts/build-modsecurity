@@ -27,5 +27,7 @@ git submodule update
 make
 #Installing it directly makes up for a smaller layer in the docker history, there is over 1GB of .o files
 make install
-
+mkdir /tmp/configs
+cp /tmp/modsecurity/modsecurity.conf-recommended /tmp/configs/modsecurity.conf
+cp /tmp/modsecurity/unicode.mapping /tmp/configs
 echo -e "${BLUE}❯ ${GREEN}ModSecurity build completed${RESET}"
