@@ -16,12 +16,15 @@ echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
 echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
 # pre-built modsecurity is in /usr/local/modsecurity
 mkdir -p /etc/nginx/modules/
-mkdir -p /data/modsec/ruleset
-cp /tmp/configs/modsecurity.conf /data/modsec
-cp /tmp/configs/unicode.mapping /data/modsec
-sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /data/modsec/modsecurity.conf
+mkdir -p /data/modsec/ruleset/
 
-ln -sf /data/modsec /etc/nginx
+cp /tmp/configs/modsecurity.conf /data/modsec/modsecurity.conf
+cp /tmp/configs/unicode.mapping /data/modsec/unicode.mapping
+
+sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /data/modsec/modsecurity.conf
+sed-patch 's|SecAuditLog.*|SecAuditLog /data/logs/modsec_audit.log|' /data/modsec/modsecurity.conf
+
+ln -sf /data/modsec/ /etc/nginx
 cat <<EOF > /data/modsec/main.conf
 Include /etc/nginx/modsec/modsecurity.conf
 Include /etc/nginx/modsec/ruleset/crs-setup.conf

@@ -47,18 +47,18 @@ docker build \
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}acmesh ${CYAN}...${RESET}"
 docker build \
-        --build-arg DOCKER_IMAGE \
-        --build-arg MAINTAINER \
-        --build-arg BASE_TAG \
+        --build-arg DOCKER_IMAGE="$DOCKER_IMAGE" \
+        --build-arg MAINTAINER="$MAINTAINER" \
+        --build-arg BASE_TAG="$BASE_TAG" \
         -t ${DOCKER_IMAGE}:acmesh \
         -f docker/Dockerfile.acmesh \
         .
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}certbot ${CYAN}...${RESET}"
 docker build \
-        --build-arg BASE_TAG \
-        --build-arg DOCKER_IMAGE \
-        --build-arg MAINTAINER \
+        --build-arg DOCKER_IMAGE="$DOCKER_IMAGE" \
+        --build-arg MAINTAINER="$MAINTAINER" \
+        --build-arg BASE_TAG="$BASE_TAG" \
         -t ${DOCKER_IMAGE}:certbot \
         -f docker/Dockerfile.certbot \
         .
@@ -66,8 +66,8 @@ docker build \
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}acmesh-golang ${CYAN}...${RESET}"
 docker build \
         --build-arg BASE_TAG=acmesh \
-        --build-arg DOCKER_IMAGE \
-        --build-arg MAINTAINER \
+        --build-arg DOCKER_IMAGE="$DOCKER_IMAGE" \
+        --build-arg MAINTAINER="$MAINTAINER" \
         -t ${DOCKER_IMAGE}:acmesh-golang \
         -f docker/Dockerfile.acmesh-golang \
         .
@@ -75,8 +75,8 @@ docker build \
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}certbot-node ${CYAN}...${RESET}"
 docker build \
         --build-arg BASE_TAG=certbot \
-        --build-arg DOCKER_IMAGE \
-        --build-arg MAINTAINER \
+        --build-arg DOCKER_IMAGE="$DOCKER_IMAGE" \
+        --build-arg MAINTAINER="$MAINTAINER" \
         -t ${DOCKER_IMAGE}:certbot-node \
         -f docker/Dockerfile.certbot-node \
         .
