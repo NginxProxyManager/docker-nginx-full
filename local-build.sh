@@ -7,6 +7,8 @@ export GREEN='\E[1;32m'
 export RESET='\E[0m'
 
 DOCKER_IMAGE=baudneo/nginx-full
+MAINTAINER="baudneo <baudneo@protonmail.com>"
+REPO_OWNER="baudneo"
 
 export OPENRESTY_VERSION=1.19.9.1
 export LUA_VERSION=5.1.5
@@ -22,8 +24,8 @@ export MODSECURITY_NGINX_VERSION=1.0.2
 export CRS_VERSION=3.3.2
 
 # Builds
-
-echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}latest ${CYAN}...${RESET}"
+BASE_TAG='cs-modsec'
+echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}${BASE_TAG} ${CYAN}...${RESET}"
 docker build \
         --pull \
         --build-arg OPENRESTY_VERSION \
@@ -35,20 +37,26 @@ docker build \
         --build-arg MODSECURITY_VERSION \
         --build-arg MODSECURITY_NGINX_VERSION \
         --build-arg CRS_VERSION \
-        -t ${DOCKER_IMAGE}:latest \
+        --build-arg DOCKER_IMAGE \
+        --build-arg MAINTAINER \
+        --build-arg BASE_TAG \
+        --build-arg REPO_OWNER \
+        -t ${DOCKER_IMAGE}:${BASE_TAG} \
         -f docker/Dockerfile \
         .
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}acmesh ${CYAN}...${RESET}"
 docker build \
-        --build-arg BASE_TAG=latest \
+        --build-arg BASE_TAG \
         -t ${DOCKER_IMAGE}:acmesh \
         -f docker/Dockerfile.acmesh \
         .
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}certbot ${CYAN}...${RESET}"
 docker build \
-        --build-arg BASE_TAG=latest \
+        --build-arg BASE_TAG \
+        --build-arg DOCKER_IMAGE \
+        --build-arg MAINTAINER \
         -t ${DOCKER_IMAGE}:certbot \
         -f docker/Dockerfile.certbot \
         .
@@ -56,6 +64,8 @@ docker build \
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}acmesh-golang ${CYAN}...${RESET}"
 docker build \
         --build-arg BASE_TAG=acmesh \
+        --build-arg DOCKER_IMAGE \
+        --build-arg MAINTAINER \
         -t ${DOCKER_IMAGE}:acmesh-golang \
         -f docker/Dockerfile.acmesh-golang \
         .
@@ -63,6 +73,8 @@ docker build \
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}certbot-node ${CYAN}...${RESET}"
 docker build \
         --build-arg BASE_TAG=certbot \
+        --build-arg DOCKER_IMAGE \
+        --build-arg MAINTAINER \
         -t ${DOCKER_IMAGE}:certbot-node \
         -f docker/Dockerfile.certbot-node \
         .

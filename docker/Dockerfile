@@ -5,18 +5,19 @@
 FROM debian:buster-slim as nginxbuilder
 
 ARG OPENRESTY_VERSION
-ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
+# CrowdSec and ModSecurity
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION
 ARG MAXMINDDB_VERSION
-ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
-ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${MAXMINDDB_VERSION}/libmaxminddb-${MAXMINDDB_VERSION}.tar.gz
-# modsecurity
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
 ARG MODSECURITY_NGINX_VERSION
+# URLs
+ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
+ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
+ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${MAXMINDDB_VERSION}/libmaxminddb-${MAXMINDDB_VERSION}.tar.gz
 ARG MODSECURITY_NGINX_URL=https://github.com/SpiderLabs/ModSecurity-nginx/releases/download/v${MODSECURITY_NGINX_VERSION}/modsecurity-nginx-v${MODSECURITY_NGINX_VERSION}.tar.gz
 ARG MODSECURITY_GIT_URL=https://github.com/SpiderLabs/ModSecurity.git
 
@@ -70,7 +71,7 @@ RUN /tmp/build-openresty
 #############
 
 FROM debian:buster-slim
-LABEL maintainer="baudneo <baudneo@protonmail.com>"
+LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -160,7 +161,7 @@ RUN apt-get update \
 LABEL org.label-schema.schema-version="1.0" \
         org.label-schema.license="MIT" \
         org.label-schema.name="nginx-full" \
-        org.label-schema.description="A base image for use by Nginx Proxy Manager" \
-        org.label-schema.url="https://github.com/baudneo/docker-nginx-full" \
-        org.label-schema.vcs-url="https://github.com/baudneo/docker-nginx-full.git" \
-        org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:latest"
+        org.label-schema.description="A base image for use by Nginx Proxy Manager with CrowdSec, GeoIP2 and ModSecurity" \
+        org.label-schema.url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full" \
+        org.label-schema.vcs-url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full.git" \
+        org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager}:${BASE_TAG:-latest}"

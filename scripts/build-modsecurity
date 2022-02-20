@@ -8,15 +8,14 @@ RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Building ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
 
-# modsecurity
+# modsecurity connector
 mkdir /tmp/modsecurity-nginx
 curl -# -L  "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
-
+# modsecurity
 git clone --depth 1 --branch v"${MODSECURITY_VERSION}" "${MODSECURITY_GIT_URL}" /tmp/modsecurity
 cd /tmp/modsecurity
 
 ./build.sh
-
 git submodule init
 git submodule update
 
@@ -25,7 +24,6 @@ git submodule update
     --enable-parser-generation \
     --enable-mutex-on-pm
 make
-#Installing it directly makes up for a smaller layer in the docker history, there is over 1GB of .o files
 make install
 mkdir /tmp/configs
 cp /tmp/modsecurity/modsecurity.conf-recommended /tmp/configs/modsecurity.conf

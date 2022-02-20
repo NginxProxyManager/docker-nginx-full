@@ -7,15 +7,11 @@ GREEN='\E[1;32m'
 RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Installing Lua ${YELLOW}${LUA_VERSION}...${RESET}"
-
 cd /tmp/lua
 make install
-
 echo -e "${BLUE}❯ ${GREEN}Lua install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing Luarocks ${YELLOW}${LUAROCKS_VERSION}...${RESET}"
-
 cd /tmp/luarocks
 make install
-
 echo -e "${BLUE}❯ ${GREEN}Luarocks install completed${RESET}"
