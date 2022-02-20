@@ -17,7 +17,7 @@ cd /tmp/libmaxminddb
     --with-pic \
     --enable-shared=yes \
     --enable-static=yes
-make
+make -j20
 make check
 make install
 ldconfig

@@ -36,4 +36,4 @@ RUN go get -u github.com/kyoh86/richgo \
 	&& go get -u github.com/sonatype-nexus-community/nancy \
 	&& rm -rf /root/.cache/go-build
 
-LABEL org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:acmesh-golang"
+LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:acmesh-golang"

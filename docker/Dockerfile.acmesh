@@ -1,9 +1,9 @@
-FROM baudneo/nginx-full:${BASE_TAG:-latest}
+FROM baudneo/nginx-full:cs-modsec
 LABEL maintainer="baudneo <baudneo@protonmail.com>"
 
 
 ARG TARGETPLATFORM
-RUN echo "Acme.sh: baudneo/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Acme.sh: baudneo/nginx-full:cs-modsec, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
