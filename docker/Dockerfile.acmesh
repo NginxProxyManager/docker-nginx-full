@@ -2,6 +2,8 @@ ARG DOCKER_IMAGE
 ARG BASE_TAG
 ARG MAINTAINER
 
+
+RUN echo "docker image = $DOCKER_IMAGE - base tag = $BASE_TAG - maintainer = $MAINTAINER"
 FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 

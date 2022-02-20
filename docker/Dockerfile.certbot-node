@@ -1,6 +1,7 @@
 ARG DOCKER_IMAGE
 ARG BASE_TAG
 ARG MAINTAINER
+RUN echo "docker image = $DOCKER_IMAGE - base tag = $BASE_TAG - maintainer = $MAINTAINER - target platform = $TARGET_PLATFORM"
 
 FROM ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${CERTBOT_BASE_TAG:-certbot}
 LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
