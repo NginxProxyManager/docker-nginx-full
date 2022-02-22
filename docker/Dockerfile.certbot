@@ -3,7 +3,6 @@
 #############
 
 FROM debian:buster-slim as certbotbuilder
-
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update
@@ -45,11 +44,11 @@ RUN pip install cryptography==2.8 \
 # Final Image
 #############
 
-FROM nginxproxymanager/nginx-full:${BASE_TAG:-latest}
-LABEL maintainer="Jamie Curnow <jc@jc21.com>"
+FROM baudneo/nginx-full:cs-modsec
+LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 ARG TARGETPLATFORM
-RUN echo "Certbot: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Certbot: nginxproxymanager/nginx-full:latest, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apt-get update \
