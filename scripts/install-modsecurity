@@ -14,25 +14,24 @@ ldconfig
 echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
-# pre-built modsecurity is in /usr/local/modsecurity
-mkdir -p /etc/nginx/modules/
-mkdir -p /data/modsec/ruleset/
+# pre-built modsecurity is already copied into /usr/local/modsecurity
+mkdir -p /usr/local/modsecurity/templates/ruleset
 
-cp /tmp/configs/modsecurity.conf /data/modsec/modsecurity.conf
-cp /tmp/configs/unicode.mapping /data/modsec/unicode.mapping
+cp /tmp/configs/modsecurity.conf /usr/local/modsecurity/templates/modsecurity.conf
+cp /tmp/configs/unicode.mapping /usr/local/modsecurity/templates/unicode.mapping
 
-sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /data/modsec/modsecurity.conf
-sed-patch 's|SecAuditLog.*|SecAuditLog /data/logs/modsec_audit.log|' /data/modsec/modsecurity.conf
+sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /usr/local/modsecurity/templates/modsecurity.conf
+sed-patch 's|SecAuditLog.*|SecAuditLog /data/logs/modsec_audit.log|' /usr/local/modsecurity/templates/modsecurity.conf
+echo -e "${BLUE}❯ ${GREEN}ModSecurity install completed${RESET}"
 
-ln -sf /data/modsec/ /etc/nginx
-cat <<EOF > /data/modsec/main.conf
+cat <<EOF > /usr/local/modsecurity/templates/main.conf
 Include /etc/nginx/modsec/modsecurity.conf
 Include /etc/nginx/modsec/ruleset/crs-setup.conf
 Include /etc/nginx/modsec/ruleset/rules/*.conf
 EOF
-echo -e "${BLUE}❯ ${GREEN}ModSecurity install completed${RESET}"
 
 echo -e "${BLUE}❯ ${CYAN}Installing OWASP-CoreRuleSet ${YELLOW}${CRS_VERSION}...${RESET}"
-curl -# -L "https://codeload.github.com/coreruleset/coreruleset/tar.gz/refs/tags/v${CRS_VERSION}" | tar xz --strip 1 -C /data/modsec/ruleset
-mv /data/modsec/ruleset/crs-setup.conf.example /data/modsec/ruleset/crs-setup.conf
+curl -# -L "https://codeload.github.com/coreruleset/coreruleset/tar.gz/refs/tags/v${CRS_VERSION}" | tar xz --strip 1 -C /usr/local/modsecurity/templates/ruleset
+mv /usr/local/modsecurity/templates/ruleset/crs-setup.conf.example /usr/local/modsecurity/templates/ruleset/crs-setup.conf
+mv /usr/local/modsecurity/templates/ruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example /usr/local/modsecurity/templates/ruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
 echo -e "${BLUE}❯ ${GREEN}OWASP-CoreRuleSet install completed${RESET}"
