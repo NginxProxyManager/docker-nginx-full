@@ -73,8 +73,10 @@ COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
 
 ARG OPENRESTY_VERSION
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
-	OPENRESTY_VERSION=${OPENRESTY_VERSION}
+	OPENRESTY_VERSION=${OPENRESTY_VERSION} \
+	CROWDSEC_OPENRESTY_BOUNCER_VERSION=${CROWDSEC_OPENRESTY_BOUNCER_VERSION}
 
 # Install openresty, lua, then clean up file system
 RUN apt-get update \

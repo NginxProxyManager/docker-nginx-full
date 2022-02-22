@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Installing Crowdsec OpenResty Bouncer ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
+
+cd /tmp
+#Offical Crowdsec download location is currently blocked due to two pull requests waiting to be added for full support for Docker installs
+#weg "https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
+wget "https://github.com/LePresidente/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
+mkdir -p /tmp/crowdsec
+tar -xzf --strip 1 crowdsec-openresty-bouncer.tgz -C /tmp/crowdsec
+cd /tmp/crowdsec
+
+bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --docker
+sed-patch 's|ENABLED=.*|ENABLED=false|' /defaults/crowdsec/crowdsec-openresty-bouncer.conf
+
+echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"
