@@ -71,6 +71,6 @@ cd /tmp/openresty
         --with-stream_ssl_module \
         --with-stream_ssl_preread_module
 
-make -j20
+make -j2
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty build completed${RESET}"

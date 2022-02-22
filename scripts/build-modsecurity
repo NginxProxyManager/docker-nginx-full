@@ -23,7 +23,7 @@ git submodule update
     --with-lmdb \
     --enable-parser-generation \
     --enable-mutex-on-pm
-make -j20
+make -j2
 make install
 mkdir /tmp/configs
 cp /tmp/modsecurity/modsecurity.conf-recommended /tmp/configs/modsecurity.conf

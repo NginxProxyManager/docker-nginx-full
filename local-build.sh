@@ -6,11 +6,6 @@ export YELLOW='\E[1;33m'
 export GREEN='\E[1;32m'
 export RESET='\E[0m'
 
-DOCKER_IMAGE=baudneo/nginx-full
-MAINTAINER="baudneo <baudneo@protonmail.com>"
-REPO_OWNER="baudneo"
-BASE_TAG='cs-modsec'
-
 export OPENRESTY_VERSION=1.19.9.1
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
@@ -19,9 +14,11 @@ export NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 export MAXMINDDB_VERSION=1.6.0
 # crowdsec openresty bouncer
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
-#modsecurity
+#modsecurity core version
 export MODSECURITY_VERSION=3.0.6
+#modsecurity nginx connector version
 export MODSECURITY_NGINX_VERSION=1.0.2
+# OWASP-CoreRuleSet version
 export CRS_VERSION=3.3.2
 
 # Builds

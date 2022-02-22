@@ -1,9 +1,9 @@
-FROM baudneo/nginx-full:cs-modsec
-LABEL maintainer="baudneo <baudneo@protonmail.com>"
+FROM nginxproxymanager/nginx-full:${BASE_TAG:-latest}
+LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
 
 
 ARG TARGETPLATFORM
-RUN echo "Acme.sh: baudneo/nginx-full:cs-modsec, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Acme.sh: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
@@ -25,4 +25,4 @@ COPY ./files/acme.sh-wrapper /bin/acme.sh
 # Test that the wrapper script is working
 RUN /bin/acme.sh -h
 
-LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:acmesh"
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:acmesh"
