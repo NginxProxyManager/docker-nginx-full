@@ -57,6 +57,7 @@ RUN apt-get update \
 	tzdata \
 	unzip \
 	zlib1g \
+	gettext \
         wget \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \

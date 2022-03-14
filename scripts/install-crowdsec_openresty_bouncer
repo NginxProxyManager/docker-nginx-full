@@ -9,9 +9,7 @@ RESET='\E[0m'
 echo -e "${BLUE}❯ ${CYAN}Installing Crowdsec OpenResty Bouncer ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
 
 cd /tmp
-#Offical Crowdsec download location is currently blocked due to two pull requests waiting to be added for full support for Docker installs
-#weg "https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
-wget "https://github.com/LePresidente/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
+wget "https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
 mkdir -p /tmp/crowdsec
 tar xzf crowdsec-openresty-bouncer.tgz --strip 1 -C /tmp/crowdsec
 cd /tmp/crowdsec
