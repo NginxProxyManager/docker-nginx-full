@@ -12,6 +12,7 @@ cd /tmp
 wget "https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz"
 mkdir -p /tmp/crowdsec
 tar xzf crowdsec-openresty-bouncer.tgz --strip 1 -C /tmp/crowdsec
+rm -rf /tmp/crowdsec-openresty-bouncer.tgz
 cd /tmp/crowdsec
 
 bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --docker
