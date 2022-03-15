@@ -88,8 +88,8 @@ RUN apt-get update \
 	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
-	&&  /tmp/install-crowdsec_openresty_bouncer \
-	&& apt-get remove -y make gcc git wget \
+	&& /tmp/install-crowdsec_openresty_bouncer \
+	&& apt-get remove -y make gcc git wget gettext \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \

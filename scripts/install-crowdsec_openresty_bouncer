@@ -16,5 +16,6 @@ cd /tmp/crowdsec
 
 bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --docker
 sed -i 's|ENABLED=.*|ENABLED=false|' /defaults/crowdsec/crowdsec-openresty-bouncer.conf
+rm /tmp/crowdsec
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"
