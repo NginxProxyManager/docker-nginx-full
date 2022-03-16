@@ -25,6 +25,9 @@ docker buildx build \
 	--build-arg OPENRESTY_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
+	--build-arg MODSECURITY_VERSION \
+	--build-arg MODSECURITY_NGINX_VERSION \
+	--build-arg MAXMIND_VERSION \
 	$@ \
 	.
 
