@@ -109,7 +109,10 @@ pipeline {
 					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/nginxproxymanager/${IMAGE}) as:
 
 - `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-node`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-certbot`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-certbot-node`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-acmesh`
+- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-acmesh-golang`
 """)
 				}
 			}
