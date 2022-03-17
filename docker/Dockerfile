@@ -57,6 +57,8 @@ RUN apt-get update \
 	tzdata \
 	unzip \
 	zlib1g \
+	gettext \
+	wget \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
@@ -72,16 +74,22 @@ COPY ./scripts/install-lua /tmp/install-lua
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
 
+# Copy crowdsec openresty bouncer install script
+COPY ./scripts/install-crowdsec_openresty_bouncer /tmp/install-crowdsec_openresty_bouncer
+
 ARG OPENRESTY_VERSION
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
-	OPENRESTY_VERSION=${OPENRESTY_VERSION}
+	OPENRESTY_VERSION=${OPENRESTY_VERSION} \
+	CROWDSEC_OPENRESTY_BOUNCER_VERSION=${CROWDSEC_OPENRESTY_BOUNCER_VERSION}
 
 # Install openresty, lua, then clean up file system
 RUN apt-get update \
 	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
-	&& apt-get remove -y make gcc git \
+	&& /tmp/install-crowdsec_openresty_bouncer \
+	&& apt-get remove -y make gcc git wget gettext \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \

@@ -22,6 +22,7 @@ The following images are built:
 **latest**
 - OpenResty
 - Lua
+- [Crowdsec Openresty Bouncer](https://github.com/crowdsecurity/cs-openresty-bouncer)
 
 **certbot**
 - Certbot
