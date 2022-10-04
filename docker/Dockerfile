@@ -91,7 +91,7 @@ ARG CRS_VERSION
 ARG MODSECURITY_VERSION
 ARG MODSECURITY_NGINX_VERSION
 
-LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
+LABEL maintainer="${MAINTAINER:-'baudneo <baudneo@protonmail.me>'}"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

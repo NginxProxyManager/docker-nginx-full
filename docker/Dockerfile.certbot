@@ -43,12 +43,16 @@ RUN pip install cryptography==2.8 \
 #############
 # Final Image
 #############
-
-FROM baudneo/nginx-full:cs-modsec
-LABEL maintainer="baudneo <baudneo@protonmail.com>"
-
+ARG DOCKER_IMAGE
+ARG BASE_TAG
+ARG CERTBOT_TAG
 ARG TARGETPLATFORM
-RUN echo "Certbot: baudneo/nginx-full:cs-modsec, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "DOCKER_IMAGE: ${DOCKER_IMAGE} - CERTBOT_TAG: ${CERTBOT_TAG} - BASE_TAG: ${BASE_TAG} - TARGETPLATFORM: ${TARGETPLATFORM} - MAINTAINER: ${MAINTAINER}"
+
+FROM baudneo/nginx-full:${BASE_TAG:-local_latest}
+LABEL maintainer="${MAINTAINER:-baudneo <baudneo@protonmail.com>}"
+
+RUN echo "Certbot: baudneo/${DOCKER_IMAGE:-nginx-full}:${CERTBOT_TAG:-local_certbot}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apt-get update \
@@ -67,4 +71,4 @@ RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
 	&& python3 -m venv /opt/certbot/ \
 	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
-LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:certbot"
+LABEL org.label-schema.cmd="docker run --rm -ti baudneo/nginx-full:${CERTBOT_TAG:-certbot}"
