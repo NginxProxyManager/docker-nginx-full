@@ -10,12 +10,12 @@ export RESET='\E[0m'
 export DOCKER_IMAGE=baudneo/nginx-full
 export MAINTAINER="baudneo <baudneo@protonmail.com>"
 export REPO_OWNER="baudneo"
-export BASE_TAG='local_latest'
+export BASE_TAG='latest'
 
-export CERTBOT_NODE_TAG='local_certbot-node'
-export CERTBOT_TAG='local_certbot'
-#export ACMESH_TAG='local_acmesh'
-#export ACMESH_GO_TAG='local_acmesh-golang'
+export CERTBOT_NODE_TAG='certbot-node'
+export CERTBOT_TAG='certbot'
+#export ACMESH_TAG='acmesh'
+#export ACMESH_GO_TAG='acmesh-golang'
 
 export OPENRESTY_VERSION=1.21.4.1
 export LUA_VERSION=5.1.5

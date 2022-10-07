@@ -12,13 +12,17 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${DIR}/.."
 
 # Buildx Builder
-docker buildx create --name "${BUILDX_NAME:-nginx-full}" || echo
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+docker buildx rm "${BUILDX_NAME:-nginx-proxy-manager}"
+docker buildx create --name "${BUILDX_NAME:-nginx-full}" --driver docker-container --driver-opt image=moby/buildkit:master --use || echo
+docker buildx inspect --bootstrap
 docker buildx use "${BUILDX_NAME:-nginx-full}"
 
 docker buildx build \
 	--platform linux/amd64,linux/arm64,linux/arm/7 \
 	--progress plain \
 	--pull \
+	\
 	--build-arg BASE_TAG \
 	--build-arg ACMESH_BASE_TAG \
 	--build-arg CERTBOT_BASE_TAG \
@@ -32,6 +36,7 @@ docker buildx build \
   --build-arg MODSECURITY_NGINX_VERSION \
   --build-arg CRS_VERSION \
   --build-arg CRS_VERSION \
+  \
 	"$@" \
 	.
 

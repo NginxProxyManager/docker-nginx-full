@@ -1,5 +1,5 @@
 
-FROM baudneo/nginx-full:local_certbot
+FROM baudneo/nginx-full:certbot
 ARG CERTBOT_TAG
 ARG CERTBOT_NODE_TAG
 ARG BASE_TAG

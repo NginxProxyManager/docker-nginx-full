@@ -1,11 +1,5 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
-
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
 cd /tmp/openresty
 make install
@@ -14,6 +8,6 @@ echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
 luarocks install lua-cjson
 luarocks install lua-resty-openidc
-# Crowdsec needs lua-resty-http
+# Crowdsec needs lua-resty-http, since this method does not use the install.sh script supplied with the bouncer
 luarocks install lua-resty-http
 echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"

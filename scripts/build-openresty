@@ -1,10 +1,5 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION} ${CYAN}with ModSecurity-nginx ${YELLOW}${MODSECURITY_NGINX_VERSION}...${RESET}"
 
@@ -55,7 +50,6 @@ cd /tmp/openresty
         --with-http_random_index_module \
         --with-http_realip_module \
         --with-http_secure_link_module \
-        --with-http_auth_request_module \
         --with-http_degradation_module \
         --with-http_slice_module \
         --with-http_ssl_module \
