@@ -1,29 +1,24 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
-
-echo -e "${BLUE}❯ ${CYAN}Building ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building ModSecurity from branch ${YELLOW}${MODSECURITY_BRANCH}...${RESET}"
 
 # modsecurity connector
 mkdir /tmp/modsecurity-nginx
-curl -# -L  "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
+curl -# -L "${MODSECURITY_NGINX_URL}" | tar -xz --strip 1 -C /tmp/modsecurity-nginx
 # modsecurity
-git clone --depth 1 --branch v"${MODSECURITY_VERSION}" "${MODSECURITY_GIT_URL}" /tmp/modsecurity
+git clone --branch "${MODSECURITY_BRANCH}" "${MODSECURITY_GIT_URL}" /tmp/modsecurity
 cd /tmp/modsecurity
-
-./build.sh
+if [ -n "${MODSECURITY_COMMIT_SHA}" ]; then
+  git checkout "$MODSECURITY_COMMIT_SHA"
+fi
 git submodule init
 git submodule update
-
-./configure \
-    --with-lmdb \
-    --enable-parser-generation \
-    --enable-mutex-on-pm
-make -j2
+./build.sh
+#     --with-lmdb \
+#--enable-parser-generation \
+#  --enable-mutex-on-pm
+./configure
+make -j20
 make install
 mkdir /tmp/configs
 cp /tmp/modsecurity/modsecurity.conf-recommended /tmp/configs/modsecurity.conf

@@ -1,11 +1,5 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
-
 echo -e "${BLUE}❯ ${CYAN}Downloading CrowdSec Openresty Bouncer package ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
 mkdir -p /crowdsec/
 cd /tmp
@@ -13,9 +7,11 @@ mkdir -p crowdsec-openresty-bouncer
 curl -# -L "${CROWDSEC_OPENRESTY_BOUNCER_URL}" | tar xz --strip 1 -C crowdsec-openresty-bouncer
 echo -e "${BLUE}❯ ${CYAN}Installing CrowdSec OpenResty-Bouncer ${YELLOW}${CROWDSEC_OPENRESTY_BOUNCER_VERSION}...${RESET}"
 cp /tmp/crowdsec-openresty-bouncer/openresty/crowdsec_openresty.conf /crowdsec/crowdsec_openresty.conf
-sed-patch 's|/etc/crowdsec/bouncers/crowdsec-openresty-bouncer.conf|/data/crowdsec/crowdsec-openresty-bouncer.conf|' /crowdsec/crowdsec_openresty.conf
-sed-patch 's|/usr/local/openresty/lualib/plugins/crowdsec|/etc/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf
-sed-patch 's|$prefix/../lualib/plugins/crowdsec|/etc/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf
-cp /tmp/crowdsec-openresty-bouncer/config/template.conf /crowdsec/crowdsec-openresty-bouncer.conf
+sed -i 's|/etc/crowdsec/bouncers/crowdsec-openresty-bouncer.conf|/data/crowdsec/crowdsec-openresty-bouncer.conf|' /crowdsec/crowdsec_openresty.conf
+sed -i 's|$prefix/../lualib/plugins/crowdsec|/etc/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf
+echo -e "${BLUE}❯ ${CYAN}Patched crowdsec_openresty.conf, ${RED}copying bouncer config...${RESET}"
+cp /tmp/crowdsec-openresty-bouncer/config/config_example.conf /crowdsec/crowdsec-openresty-bouncer.conf.template
 cp -r /tmp/crowdsec-openresty-bouncer/lua /crowdsec/
-echo -e "${BLUE}❯ ${GREEN}CrowdSec OpenResty-Bouncer install completed${RESET}"
+cp -r /tmp/crowdsec-openresty-bouncer/templates /crowdsec/
+
+echo -e "${BLUE}❯❯❯ ${GREEN}CrowdSec OpenResty-Bouncer install completed${RESET}"

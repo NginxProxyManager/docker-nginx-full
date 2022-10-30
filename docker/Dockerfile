@@ -18,6 +18,8 @@ ARG NGINX_HTTP_GEOIP2_MODULE_VERSION
 ARG MAXMINDDB_VERSION
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
+ARG MODSECURITY_BRANCH
+ARG MODSECURITY_COMMIT_SHA
 ARG MODSECURITY_NGINX_VERSION
 # URLs
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
@@ -25,6 +27,13 @@ ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/
 ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${MAXMINDDB_VERSION}/libmaxminddb-${MAXMINDDB_VERSION}.tar.gz
 ARG MODSECURITY_NGINX_URL=https://github.com/SpiderLabs/ModSecurity-nginx/releases/download/v${MODSECURITY_NGINX_VERSION}/modsecurity-nginx-v${MODSECURITY_NGINX_VERSION}.tar.gz
 ARG MODSECURITY_GIT_URL=https://github.com/SpiderLabs/ModSecurity.git
+
+ENV BLUE='\E[1;34m' \
+    CYAN='\E[1;36m' \
+    YELLOW='\E[1;33m' \
+    GREEN='\E[1;32m' \
+    RED='\E[1;31m' \
+    RESET='\E[0m'
 
 RUN apt-get update \
         && apt-get install -y \
@@ -37,7 +46,7 @@ RUN apt-get update \
         ca-certificates \
         libncurses-dev \
         perl \
-        libpcre3-dev \
+        libpcre2-dev \
         libreadline-dev \
         libssl-dev \
         libyajl-dev \
@@ -89,11 +98,24 @@ ARG MAXMINDDB_VERSION
 ARG OPENRESTY_VERSION
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
+ARG MODSECURITY_BRANCH
+ARG MODSECURITY_COMMIT_SHA
 ARG MODSECURITY_NGINX_VERSION
 
-LABEL maintainer="${MAINTAINER:-'Jamie Curnow <jc@jc21.com>'}"
+LABEL maintainer="${MAINTAINER:-'baudneo <baudneo@protonmail.com>'}"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV BLUE='\E[1;34m' \
+    CYAN='\E[1;36m' \
+    YELLOW='\E[1;33m' \
+    GREEN='\E[1;32m' \
+    RED='\E[1;31m' \
+    RESET='\E[0m' \
+    SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+    OPENRESTY_VERSION=${OPENRESTY_VERSION} \
+    CROWDSEC_BOUNCER="0" \
+     ADMIN_PANEL_LOG="0"
 
 RUN echo "Base: debian:buster-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
@@ -106,6 +128,7 @@ RUN apt-get update \
         figlet \
         jq \
         libncurses6 \
+        libpcre2-dev \
         libpcre3 \
         libreadline7 \
         openssl \
@@ -115,7 +138,6 @@ RUN apt-get update \
         unzip \
         zlib1g \
         libyajl2 \
-        libpcre3 \
         libxml2 \
         libcurl3-gnutls \
         libgeoip1 \
@@ -127,7 +149,6 @@ RUN apt-get update \
         && rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
 
 COPY ./files/.bashrc /root/.bashrc
-COPY ./files/sed-patch /usr/bin
 
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
@@ -150,11 +171,6 @@ COPY ./scripts/install-modsecurity /tmp/install-modsecurity
 # Copy crowdsec openresty bouncer install script
 COPY ./scripts/install-crowdsec-openresty-bouncer /tmp/install-crowdsec-openresty-bouncer
 
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
-        OPENRESTY_VERSION=${OPENRESTY_VERSION} \
-        CROWDSEC_BOUNCER="0" \
-         ADMIN_PANEL_LOG="0"
-
 # Install openresty, lua, crowdsec openresty bouncer then clean up file system
 RUN apt-get update \
         && apt-get install -y gcc make socat git \
@@ -172,6 +188,6 @@ LABEL org.label-schema.schema-version="1.0" \
         org.label-schema.license="MIT" \
         org.label-schema.name="nginx-full" \
         org.label-schema.description="A base image for use by Nginx Proxy Manager with CrowdSec, GeoIP2 and ModSecurity" \
-        org.label-schema.url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full" \
-        org.label-schema.vcs-url="https://github.com/${REPO_OWNER:-nginxproxymanager}/docker-nginx-full.git" \
-        org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-nginxproxymanager/nginx-full}:${BASE_TAG:-latest}"
+        org.label-schema.url="https://github.com/${REPO_OWNER:-baudneo}/docker-nginx-full" \
+        org.label-schema.vcs-url="https://github.com/${REPO_OWNER:-baudneo}/docker-nginx-full.git" \
+        org.label-schema.cmd="docker run --rm -ti ${DOCKER_IMAGE:-baudneo/nginx-full}:${BASE_TAG:-latest}"

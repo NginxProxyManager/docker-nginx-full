@@ -1,27 +1,20 @@
 #!/bin/bash -e
 
-BLUE='\E[1;34m'
-CYAN='\E[1;36m'
-YELLOW='\E[1;33m'
-GREEN='\E[1;32m'
-RESET='\E[0m'
-
-
 echo -e "${BLUE}❯ ${CYAN}Installing MaxMind DB ${YELLOW}${MAXMINDDB_VERSION}...${RESET}"
 cd /tmp/libmaxminddb
 make install
 ldconfig
 echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
 
-echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity from branch ${YELLOW}${MODSECURITY_BRANCH}...${RESET}"
 # pre-built modsecurity is already copied into /usr/local/modsecurity
 mkdir -p /usr/local/modsecurity/templates/ruleset
 
 cp /tmp/configs/modsecurity.conf /usr/local/modsecurity/templates/modsecurity.conf
 cp /tmp/configs/unicode.mapping /usr/local/modsecurity/templates/unicode.mapping
 
-sed-patch 's|SecRuleEngine.*|SecRuleEngine On|' /usr/local/modsecurity/templates/modsecurity.conf
-sed-patch 's|SecAuditLog.*|SecAuditLog /data/logs/modsec_audit.log|' /usr/local/modsecurity/templates/modsecurity.conf
+sed -i 's|SecRuleEngine.*|SecRuleEngine On|' /usr/local/modsecurity/templates/modsecurity.conf
+sed -i 's|SecAuditLog.*|SecAuditLog /data/logs/modsec_audit.log|' /usr/local/modsecurity/templates/modsecurity.conf
 echo -e "${BLUE}❯ ${GREEN}ModSecurity install completed${RESET}"
 
 cat <<EOF > /usr/local/modsecurity/templates/main.conf
