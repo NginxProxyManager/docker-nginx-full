@@ -27,6 +27,8 @@ export MAXMINDDB_VERSION=1.6.0
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.11
 # modsecurity
 export MODSECURITY_VERSION=3.0.8
+export MODSECURITY_COMMIT_SHA=
+export MODSECURITY_BRANCH=v3/master
 export MODSECURITY_NGINX_VERSION=1.0.3
 export CRS_VERSION=3.3.4
 
@@ -40,6 +42,8 @@ docker build \
         --build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
         --build-arg NGINX_HTTP_GEOIP2_MODULE_VERSION \
         --build-arg MAXMINDDB_VERSION \
+        --build-arg MODSECURITY_BRANCH \
+        --build-arg MODSECURITY_COMMIT_SHA \
         --build-arg MODSECURITY_VERSION \
         --build-arg MODSECURITY_NGINX_VERSION \
         --build-arg CRS_VERSION \

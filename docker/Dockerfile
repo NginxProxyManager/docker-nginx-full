@@ -18,6 +18,8 @@ ARG NGINX_HTTP_GEOIP2_MODULE_VERSION
 ARG MAXMINDDB_VERSION
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
+ARG MODSECURITY_BRANCH
+ARG MODSECURITY_COMMIT_SHA
 ARG MODSECURITY_NGINX_VERSION
 # URLs
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
@@ -44,7 +46,7 @@ RUN apt-get update \
         ca-certificates \
         libncurses-dev \
         perl \
-        libpcre3-dev \
+        libpcre2-dev \
         libreadline-dev \
         libssl-dev \
         libyajl-dev \
@@ -96,6 +98,8 @@ ARG MAXMINDDB_VERSION
 ARG OPENRESTY_VERSION
 ARG CRS_VERSION
 ARG MODSECURITY_VERSION
+ARG MODSECURITY_BRANCH
+ARG MODSECURITY_COMMIT_SHA
 ARG MODSECURITY_NGINX_VERSION
 
 LABEL maintainer="${MAINTAINER:-'baudneo <baudneo@protonmail.com>'}"
@@ -124,6 +128,7 @@ RUN apt-get update \
         figlet \
         jq \
         libncurses6 \
+        libpcre2-dev \
         libpcre3 \
         libreadline7 \
         openssl \

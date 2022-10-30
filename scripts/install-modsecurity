@@ -6,7 +6,7 @@ make install
 ldconfig
 echo -e "${BLUE}❯ ${GREEN}MaxMind DB install completed${RESET}"
 
-echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity ${YELLOW}${MODSECURITY_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity from branch ${YELLOW}${MODSECURITY_BRANCH}...${RESET}"
 # pre-built modsecurity is already copied into /usr/local/modsecurity
 mkdir -p /usr/local/modsecurity/templates/ruleset
 
