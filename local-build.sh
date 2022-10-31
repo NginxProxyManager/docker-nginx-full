@@ -14,8 +14,8 @@ export BASE_TAG='latest'
 
 export CERTBOT_NODE_TAG='certbot-node'
 export CERTBOT_TAG='certbot'
-#export ACMESH_TAG='acmesh'
-#export ACMESH_GO_TAG='acmesh-golang'
+export ACMESH_TAG='acmesh'
+export ACMESH_GO_TAG='acmesh-golang'
 
 export OPENRESTY_VERSION=1.21.4.1
 export LUA_VERSION=5.1.5
