@@ -30,7 +30,7 @@ WORKDIR /root
 COPY ./files/.bashrc.acmesh-golang /root/.bashrc
 
 # Gotools
-RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.46.0
+RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.1
 RUN go install github.com/kyoh86/richgo@latest \
 	&& go install github.com/sonatype-nexus-community/nancy@latest \
 	&& rm -rf /root/.cache/go-build
