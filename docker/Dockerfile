@@ -59,6 +59,7 @@ RUN apt-get update \
 	zlib1g \
 	gettext \
 	wget \
+	xz-utils \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
