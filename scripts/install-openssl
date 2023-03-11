@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Building and installing openssl ${YELLOW}${OPENSSL_VERSION}...${RESET}"
+
+# remove previously installed openssl
+if test -f "/usr/bin/openssl"; then
+	apt-get update
+	apt-get remove -y opensssl || true
+	apt-get clean
+	rm -rf /var/lib/apt/lists/* /var/cache/*
+fi
+
+cd /tmp
+wget "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
+tar -xzf "openssl-${OPENSSL_VERSION}.tar.gz"
+mv "/tmp/openssl-${OPENSSL_VERSION}" /tmp/openssl
+cd /tmp/openssl
+
+./config
+make test
+make install
+rm -rf /usr/bin/openssl
+ln -s /usr/local/bin/openssl /usr/bin/openssl
+ldconfig
+
+cd /tmp
+rm -rf /tmp/openssl /usr/local/share/docker/openssl
+
+echo -e "${BLUE}❯ ${GREEN}openssl install completed: ${YELLOW}$(openssl version)${RESET}"

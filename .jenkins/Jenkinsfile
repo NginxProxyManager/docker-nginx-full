@@ -19,6 +19,7 @@ pipeline {
 		CROWDSEC_OPENRESTY_BOUNCER_VERSION = '0.1.7'
 		LUA_VERSION       = '5.1.5'
 		LUAROCKS_VERSION  = '3.3.1'
+		OPENSSL_VERSION   = '1.1.1t'
 	}
 	stages {
 		stage('Environment') {
