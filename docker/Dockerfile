@@ -2,12 +2,11 @@
 # Nginx Builder
 #############
 
-FROM debian:bullseye-slim as nginxbuilder
+FROM debian:buster-slim as nginxbuilder
 
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
-ARG OPENSSL_VERSION
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -17,7 +16,7 @@ RUN apt-get update \
 	libpcre3-dev \
 	libreadline-dev \
 	libssl-dev \
-	unzip \
+	openssl unzip \
 	wget \
 	zlib1g-dev \
 	git
@@ -26,9 +25,7 @@ RUN apt-get update \
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
-# Build packages
-COPY ./scripts/install-openssl /tmp/install-openssl
-RUN /tmp/install-openssl
+# Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
 RUN /tmp/build-openresty
 
@@ -36,13 +33,13 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM debian:bullseye-slim
+FROM debian:buster-slim
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG TARGETPLATFORM
-RUN echo "Base: debian:bullseye-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
+RUN echo "Base: debian:buster-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apt-get update \
@@ -51,13 +48,11 @@ RUN apt-get update \
 	ca-certificates \
 	curl \
 	figlet \
-	gcc \
 	jq \
 	libncurses6 \
 	libpcre3 \
-	libreadline8 \
-	libc6-dev \
-	make \
+	libreadline7 \
+	openssl \
 	perl \
 	tzdata \
 	unzip \
@@ -70,11 +65,6 @@ RUN apt-get update \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
 
 COPY ./files/.bashrc /root/.bashrc
-
-# build and install openssl
-ARG OPENSSL_VERSION
-COPY ./scripts/install-openssl /tmp/install-openssl
-RUN /tmp/install-openssl
 
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
@@ -90,17 +80,16 @@ COPY ./scripts/install-crowdsec_openresty_bouncer /tmp/install-crowdsec_openrest
 
 ARG OPENRESTY_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
-
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 	OPENRESTY_VERSION=${OPENRESTY_VERSION} \
-	OPENSSL_VERSION=${OPENSSL_VERSION} \
 	CROWDSEC_OPENRESTY_BOUNCER_VERSION=${CROWDSEC_OPENRESTY_BOUNCER_VERSION}
 
 # Install openresty, lua, then clean up file system
 RUN apt-get update \
+	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
-	&& apt-get remove -y make gcc git wget gettext libc6-dev \
+	&& apt-get remove -y make gcc git wget gettext \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
