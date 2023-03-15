@@ -1,6 +1,6 @@
 pipeline {
 	triggers {
-		cron( env.BRANCH_NAME.equals('master') ? 'H 3 * * *' : '')
+		cron( env.BRANCH_NAME.equals('master') ? 'H 1 * * *' : '')
 	}
 	agent {
 		label 'docker-multiarch'
