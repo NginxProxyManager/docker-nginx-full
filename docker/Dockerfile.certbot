@@ -45,11 +45,11 @@ RUN pip install cryptography==2.8 \
 # Final Image
 #############
 
-FROM nginxproxymanager/nginx-full:${BASE_TAG:-latest}
+FROM jc21/nginx-full:${BASE_TAG:-latest}
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 ARG TARGETPLATFORM
-RUN echo "Certbot: nginxproxymanager/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Certbot: jc21/nginx-full:${BASE_TAG:-latest}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 COPY scripts/install-cert-prune /tmp/install-cert-prune
 RUN /tmp/install-cert-prune "${TARGETPLATFORM:-linux/amd64}" && rm -f /tmp/install-cert-prune
@@ -71,4 +71,4 @@ RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 \
 	&& python3 -m venv /opt/certbot/ \
 	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
-LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:certbot"
+LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:certbot"

@@ -101,4 +101,4 @@ LABEL org.label-schema.schema-version="1.0" \
 	org.label-schema.description="A base image for use by Nginx Proxy Manager" \
 	org.label-schema.url="https://github.com/nginxproxymanager/docker-nginx-full" \
 	org.label-schema.vcs-url="https://github.com/nginxproxymanager/docker-nginx-full.git" \
-	org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:latest"
+	org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:latest"

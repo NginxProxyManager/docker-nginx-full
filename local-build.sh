@@ -6,7 +6,7 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-DOCKER_IMAGE=nginxproxymanager/nginx-full
+DOCKER_IMAGE=jc21/nginx-full
 
 export OPENRESTY_VERSION=1.21.4.1
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7

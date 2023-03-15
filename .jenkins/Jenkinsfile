@@ -30,11 +30,11 @@ pipeline {
 					steps {
 						script {
 							env.BASE_TAG                       = 'latest'
-							env.BUILDX_PUSH_TAGS               = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
-							env.BUILDX_PUSH_TAGS_ACMESH        = "-t docker.io/nginxproxymanager/${IMAGE}:acmesh"
-							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t docker.io/nginxproxymanager/${IMAGE}:certbot"
-							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t docker.io/nginxproxymanager/${IMAGE}:acmesh-golang"
-							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t docker.io/nginxproxymanager/${IMAGE}:certbot-node"
+							env.BUILDX_PUSH_TAGS               = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS_ACMESH        = "-t docker.io/jc21/${IMAGE}:acmesh"
+							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t docker.io/jc21/${IMAGE}:certbot"
+							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t docker.io/jc21/${IMAGE}:acmesh-golang"
+							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t docker.io/jc21/${IMAGE}:certbot-node"
 						}
 						sh 'env'
 					}
@@ -51,7 +51,7 @@ pipeline {
 							env.BASE_TAG                       = "github-${BRANCH_LOWER}"
 							env.ACMESH_BASE_TAG                = "github-${BRANCH_LOWER}-acmesh"
 							env.CERTBOT_BASE_TAG               = "github-${BRANCH_LOWER}-certbot"
-							env.BUILDX_PUSH_TAGS               = "-t docker.io/nginxproxymanager/${IMAGE}:${BASE_TAG}"
+							env.BUILDX_PUSH_TAGS               = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
 							env.BUILDX_PUSH_TAGS_ACMESH        = "${BUILDX_PUSH_TAGS}-acmesh"
 							env.BUILDX_PUSH_TAGS_CERTBOT       = "${BUILDX_PUSH_TAGS}-certbot"
 							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "${BUILDX_PUSH_TAGS}-acmesh-golang"
@@ -107,13 +107,13 @@ pipeline {
 			}
 			steps {
 				script {
-					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/nginxproxymanager/${IMAGE}) as:
+					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as:
 
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-certbot`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-certbot-node`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-acmesh`
-- `nginxproxymanager/${IMAGE}:github-${BRANCH_LOWER}-acmesh-golang`
+- `jc21/${IMAGE}:github-${BRANCH_LOWER}`
+- `jc21/${IMAGE}:github-${BRANCH_LOWER}-certbot`
+- `jc21/${IMAGE}:github-${BRANCH_LOWER}-certbot-node`
+- `jc21/${IMAGE}:github-${BRANCH_LOWER}-acmesh`
+- `jc21/${IMAGE}:github-${BRANCH_LOWER}-acmesh-golang`
 """)
 				}
 			}
