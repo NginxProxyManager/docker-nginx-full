@@ -36,7 +36,6 @@ pipeline {
 							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t docker.io/jc21/${IMAGE}:acmesh-golang"
 							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t docker.io/jc21/${IMAGE}:certbot-node"
 						}
-						sh 'env'
 					}
 				}
 				stage('Other') {
