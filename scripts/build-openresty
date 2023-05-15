@@ -12,6 +12,11 @@ cd /tmp
 wget "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz"
 tar -xzf openresty-${OPENRESTY_VERSION}.tar.gz
 mv /tmp/openresty-${OPENRESTY_VERSION} /tmp/openresty
+
+wget "https://github.com/arut/nginx-dav-ext-module/archive/refs/heads/master.tar.gz" -O nginx-dav-ext-module.tar.gz
+tar zxvf nginx-dav-ext-module.tar.gz
+mv nginx-dav-ext-module-master /tmp/openresty/nginx-dav-ext-module
+
 cd /tmp/openresty
 
 ./configure \
@@ -34,7 +39,7 @@ cd /tmp/openresty
 	--with-threads \
 	--with-http_addition_module \
 	--with-http_auth_request_module \
-	--with-http_dav_module \
+	--with-http_dav_module --add-module=nginx-dav-ext-module \
 	--with-http_flv_module \
 	--with-http_gunzip_module \
 	--with-http_gzip_static_module \

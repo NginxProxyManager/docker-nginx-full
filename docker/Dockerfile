@@ -19,6 +19,7 @@ RUN apt-get update \
 	openssl unzip \
 	wget \
 	zlib1g-dev \
+	libxslt-dev \
 	git
 
 # Lua build
@@ -59,6 +60,7 @@ RUN apt-get update \
 	zlib1g \
 	gettext \
 	wget \
+	libxslt-dev \
 	xz-utils \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
