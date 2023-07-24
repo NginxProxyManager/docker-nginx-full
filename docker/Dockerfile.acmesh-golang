@@ -37,5 +37,9 @@ RUN go install github.com/kyoh86/richgo@latest \
 	&& go install golang.org/x/vuln/cmd/govulncheck@latest \
 	&& rm -rf /root/.cache/go-build
 
+# Task
+RUN cd /usr \
+	&& curl -sL https://taskfile.dev/install.sh | sh
+
 LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:acmesh-golang"
 
