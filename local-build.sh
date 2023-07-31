@@ -13,6 +13,8 @@ export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
 
+git submodule update --init
+
 # Builds
 
 echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}latest ${CYAN}...${RESET}"
