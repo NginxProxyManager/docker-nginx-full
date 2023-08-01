@@ -2,7 +2,7 @@
 # Certbot Builder
 #############
 
-FROM debian:buster-slim as certbotbuilder
+FROM debian:bookworm-slim as certbotbuilder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
