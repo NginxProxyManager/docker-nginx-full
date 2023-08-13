@@ -37,7 +37,7 @@ RUN if [ "$(getconf LONG_BIT)" = "32" ]; then \
 	pip3 install --no-cache-dir -U cryptography==3.3.2; \
 	fi
 
-RUN pip install cryptography==2.8 \
+RUN pip install cryptography \
 	pip install --no-cache-dir cffi certbot \
 	&& pip install tldextract
 
