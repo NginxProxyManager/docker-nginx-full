@@ -23,6 +23,7 @@ docker buildx build \
 	--build-arg ACMESH_BASE_TAG \
 	--build-arg CERTBOT_BASE_TAG \
 	--build-arg OPENRESTY_VERSION \
+        --build-arg OPENSSL_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
 	--build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \

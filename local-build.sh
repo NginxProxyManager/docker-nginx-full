@@ -9,6 +9,7 @@ RESET='\E[0m'
 DOCKER_IMAGE=jc21/nginx-full
 
 export OPENRESTY_VERSION=1.21.4.2
+export OPENSSL_VERSION=3.1.2
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
@@ -19,6 +20,7 @@ echo -e "${BLUE}❯ ${CYAN}Building ${YELLOW}latest ${CYAN}...${RESET}"
 docker build \
 	--pull \
 	--build-arg OPENRESTY_VERSION \
+	--build-arg OPENSSL_VERSION \
 	--build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
