@@ -5,6 +5,7 @@
 FROM debian:buster-slim as nginxbuilder
 
 ARG OPENRESTY_VERSION
+ARG OPENSSL_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
 
@@ -70,6 +71,10 @@ COPY ./files/.bashrc /root/.bashrc
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
 COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
 COPY ./scripts/install-lua /tmp/install-lua
+
+# Copy openssl build from first image
+COPY --from=nginxbuilder /usr/local/ssl /usr/local/ssl
+RUN echo "/usr/local/ssl/lib64" > /etc/ld.so.conf.d/openssl.conf && ldconfig
 
 # Copy openresty build from first image
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
