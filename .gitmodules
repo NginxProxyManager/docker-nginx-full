@@ -1,0 +1,3 @@
+[submodule "modules/ngx_brotli"]
+	path = modules/ngx_brotli
+	url = https://github.com/google/ngx_brotli

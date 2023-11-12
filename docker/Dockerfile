@@ -21,6 +21,10 @@ RUN apt-get update \
 	zlib1g-dev \
 	git
 
+
+# Copy modules
+COPY ./modules /modules
+
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
@@ -65,6 +69,9 @@ RUN apt-get update \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
 
 COPY ./files/.bashrc /root/.bashrc
+
+# Copy modules
+COPY ./modules /modules
 
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua

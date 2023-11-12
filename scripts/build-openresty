@@ -52,7 +52,8 @@ cd /tmp/openresty
 	--with-stream \
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
-	--with-stream_ssl_preread_module
+	--with-stream_ssl_preread_module \
+	--add-module=/modules/ngx_brotli
 
 make -j2
 
