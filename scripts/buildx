@@ -8,6 +8,8 @@ RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Building docker multiarch: ${YELLOW}${*}${RESET}"
 
+git submodule update --init
+
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${DIR}/.."
 
