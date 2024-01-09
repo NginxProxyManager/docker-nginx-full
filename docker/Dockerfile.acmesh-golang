@@ -1,9 +1,12 @@
-FROM golang:1.20 as go
-FROM jc21/nginx-full:${ACMESH_BASE_TAG:-acmesh}
+ARG ACMESH_IMAGE=nginxproxymanager/nginx-full:acmesh
+FROM golang:1.21 as go
+FROM $ACMESH_IMAGE as final
+ARG ACMESH_IMAGE
+ARG TARGETPLATFORM
+
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-ARG TARGETPLATFORM
-RUN echo "Golang: jc21/nginx-full:${BASE_TAG:-acmesh}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Golang: $ACMESH_IMAGE, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 RUN apt-get update \
 	&& apt-get install -y wget gcc g++ make git sqlite3 jq \
@@ -30,12 +33,11 @@ WORKDIR /root
 COPY ./files/.bashrc.acmesh-golang /root/.bashrc
 
 # Gotools
-RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.52.2
+RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.55.2
 RUN go install github.com/kyoh86/richgo@latest \
-	&& go install github.com/sonatype-nexus-community/nancy@latest \
 	&& go install github.com/mfridman/tparse@latest \
 	&& go install golang.org/x/vuln/cmd/govulncheck@latest \
 	&& rm -rf /root/.cache/go-build
 
-LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:acmesh-golang"
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:acmesh-golang"
 

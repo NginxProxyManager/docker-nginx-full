@@ -1,12 +1,15 @@
-FROM jc21/nginx-full:${CERTBOT_BASE_TAG:-certbot}
+ARG CERTBOT_IMAGE=nginxproxymanager/nginx-full:certbot
+FROM $CERTBOT_IMAGE as final
+ARG CERTBOT_IMAGE
+ARG TARGETPLATFORM
+
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-ARG TARGETPLATFORM
-RUN echo "Node: jc21/nginx-full:${BASE_TAG:-certbot}, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+RUN echo "Node: $CERTBOT_IMAGE, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 	&& apt-get update \
 	&& apt-get install -y gcc make g++ git nodejs \
 	&& apt-get clean \
@@ -21,5 +24,4 @@ COPY ./files/test.js /tmp/test.js
 RUN node /tmp/test.js \
 	&& rm -f /tmp/test.js
 
-LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:certbot-node"
-
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:certbot-node"

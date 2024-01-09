@@ -2,7 +2,7 @@
 # Nginx Builder
 #############
 
-FROM debian:buster-slim as nginxbuilder
+FROM debian:bookworm-slim as nginxbuilder
 
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
@@ -33,13 +33,13 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM debian:buster-slim
+FROM debian:bookworm-slim as final
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG TARGETPLATFORM
-RUN echo "Base: debian:buster-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
+RUN echo "Base: debian:bookworm-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apt-get update \
@@ -51,7 +51,7 @@ RUN apt-get update \
 	jq \
 	libncurses6 \
 	libpcre3 \
-	libreadline7 \
+	libreadline8 \
 	openssl \
 	perl \
 	tzdata \
@@ -101,4 +101,4 @@ LABEL org.label-schema.schema-version="1.0" \
 	org.label-schema.description="A base image for use by Nginx Proxy Manager" \
 	org.label-schema.url="https://github.com/nginxproxymanager/docker-nginx-full" \
 	org.label-schema.vcs-url="https://github.com/nginxproxymanager/docker-nginx-full.git" \
-	org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:latest"
+	org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:latest"

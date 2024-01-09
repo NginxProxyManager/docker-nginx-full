@@ -19,9 +19,9 @@ docker buildx build \
 	--platform linux/amd64,linux/arm64,linux/arm/7 \
 	--progress plain \
 	--pull \
-	--build-arg BASE_TAG \
-	--build-arg ACMESH_BASE_TAG \
-	--build-arg CERTBOT_BASE_TAG \
+	--build-arg BASE_IMAGE \
+	--build-arg ACMESH_IMAGE \
+	--build-arg CERTBOT_IMAGE \
 	--build-arg OPENRESTY_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
