@@ -1,4 +1,4 @@
-ARG CERTBOT_IMAGE=jc21/nginx-full:certbot
+ARG CERTBOT_IMAGE=nginxproxymanager/nginx-full:certbot
 FROM $CERTBOT_IMAGE as final
 ARG CERTBOT_IMAGE
 ARG TARGETPLATFORM
@@ -24,4 +24,4 @@ COPY ./files/test.js /tmp/test.js
 RUN node /tmp/test.js \
 	&& rm -f /tmp/test.js
 
-LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:certbot-node"
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:certbot-node"

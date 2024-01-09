@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jc21/nginx-full:latest
+ARG BASE_IMAGE=nginxproxymanager/nginx-full:latest
 
 #############
 # Certbot Builder
@@ -73,4 +73,4 @@ RUN python3 -m venv /opt/certbot/ \
 	&& sed -i 's/include-system-site-packages = false/include-system-site-packages = true/g' -i /opt/certbot/pyvenv.cfg \
 	&& ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
-LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:certbot"
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:certbot"

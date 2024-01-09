@@ -11,14 +11,15 @@ pipeline {
 		ansiColor('xterm')
 	}
 	environment {
-		IMAGE        = 'nginx-full'
-		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}"
-		BRANCH_LOWER = "${BRANCH_NAME.toLowerCase().replaceAll('/', '-')}"
+		DOCKERHUB_NAMESPACE = 'nginxproxymanager'
+		IMAGE               = 'nginx-full'
+		BUILDX_NAME         = "${IMAGE}_${GIT_BRANCH}"
+		BRANCH_LOWER        = "${BRANCH_NAME.toLowerCase().replaceAll('/', '-')}"
 		// Software versions; OpenResty does not support Lua >= 5.2
-		OPENRESTY_VERSION = '1.21.4.3'
+		OPENRESTY_VERSION                  = '1.21.4.3'
 		CROWDSEC_OPENRESTY_BOUNCER_VERSION = '0.1.7'
-		LUA_VERSION       = '5.1.5'
-		LUAROCKS_VERSION  = '3.3.1'
+		LUA_VERSION                        = '5.1.5'
+		LUAROCKS_VERSION                   = '3.3.1'
 	}
 	stages {
 		stage('Environment') {
@@ -29,12 +30,12 @@ pipeline {
 					}
 					steps {
 						script {
-							env.BASE_IMAGE                     = "jc21/${IMAGE}:latest"
+							env.BASE_IMAGE                     = "${DOCKERHUB_NAMESPACE}/${IMAGE}:latest"
 							env.BUILDX_PUSH_TAGS               = "-t ${BASE_IMAGE}"
-							env.BUILDX_PUSH_TAGS_ACMESH        = "-t jc21/${IMAGE}:acmesh"
-							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t jc21/${IMAGE}:certbot"
-							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t jc21/${IMAGE}:acmesh-golang"
-							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t jc21/${IMAGE}:certbot-node"
+							env.BUILDX_PUSH_TAGS_ACMESH        = "-t ${DOCKERHUB_NAMESPACE}/${IMAGE}:acmesh"
+							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t ${DOCKERHUB_NAMESPACE}/${IMAGE}:certbot"
+							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t ${DOCKERHUB_NAMESPACE}/${IMAGE}:acmesh-golang"
+							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t ${DOCKERHUB_NAMESPACE}/${IMAGE}:certbot-node"
 						}
 					}
 				}
@@ -47,7 +48,7 @@ pipeline {
 					steps {
 						script {
 							// Defaults to the Branch name, which is applies to all branches AND pr's
-							env.BASE_IMAGE                     = "jc21/${IMAGE}:github-${BRANCH_LOWER}"
+							env.BASE_IMAGE                     = "${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}"
 							env.ACMESH_IMAGE                   = "${BASE_IMAGE}-acmesh"
 							env.CERTBOT_IMAGE                  = "${BASE_IMAGE}-certbot"
 							env.BUILDX_PUSH_TAGS               = "-t ${BASE_IMAGE}"
@@ -106,13 +107,13 @@ pipeline {
 			}
 			steps {
 				script {
-					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as:
+					def comment = pullRequest.comment("""Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/${DOCKERHUB_NAMESPACE}/${IMAGE}) as:
 
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-certbot`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-certbot-node`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-acmesh`
-- `jc21/${IMAGE}:github-${BRANCH_LOWER}-acmesh-golang`
+- `${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}`
+- `${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}-certbot`
+- `${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}-certbot-node`
+- `${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}-acmesh`
+- `${DOCKERHUB_NAMESPACE}/${IMAGE}:github-${BRANCH_LOWER}-acmesh-golang`
 """)
 				}
 			}

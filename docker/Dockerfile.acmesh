@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jc21/nginx-full:latest
+ARG BASE_IMAGE=nginxproxymanager/nginx-full:latest
 FROM $BASE_IMAGE as final
 ARG BASE_IMAGE
 ARG TARGETPLATFORM
@@ -27,5 +27,5 @@ COPY ./files/acme.sh-wrapper /bin/acme.sh
 # Test that the wrapper script is working
 RUN /bin/acme.sh -h
 
-LABEL org.label-schema.cmd="docker run --rm -ti jc21/nginx-full:acmesh"
+LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:acmesh"
 
