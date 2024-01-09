@@ -29,12 +29,12 @@ pipeline {
 					}
 					steps {
 						script {
-							env.BASE_TAG                       = 'latest'
-							env.BUILDX_PUSH_TAGS               = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
-							env.BUILDX_PUSH_TAGS_ACMESH        = "-t docker.io/jc21/${IMAGE}:acmesh"
-							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t docker.io/jc21/${IMAGE}:certbot"
-							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t docker.io/jc21/${IMAGE}:acmesh-golang"
-							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t docker.io/jc21/${IMAGE}:certbot-node"
+							env.BASE_IMAGE                     = "jc21/${IMAGE}:latest"
+							env.BUILDX_PUSH_TAGS               = "-t ${BASE_IMAGE}"
+							env.BUILDX_PUSH_TAGS_ACMESH        = "-t jc21/${IMAGE}:acmesh"
+							env.BUILDX_PUSH_TAGS_CERTBOT       = "-t jc21/${IMAGE}:certbot"
+							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "-t jc21/${IMAGE}:acmesh-golang"
+							env.BUILDX_PUSH_TAGS_CERTBOT_NODE  = "-t jc21/${IMAGE}:certbot-node"
 						}
 					}
 				}
@@ -47,10 +47,10 @@ pipeline {
 					steps {
 						script {
 							// Defaults to the Branch name, which is applies to all branches AND pr's
-							env.BASE_TAG                       = "github-${BRANCH_LOWER}"
-							env.ACMESH_BASE_TAG                = "github-${BRANCH_LOWER}-acmesh"
-							env.CERTBOT_BASE_TAG               = "github-${BRANCH_LOWER}-certbot"
-							env.BUILDX_PUSH_TAGS               = "-t docker.io/jc21/${IMAGE}:${BASE_TAG}"
+							env.BASE_IMAGE                     = "jc21/${IMAGE}:github-${BRANCH_LOWER}"
+							env.ACMESH_IMAGE                   = "${BASE_IMAGE}-acmesh"
+							env.CERTBOT_IMAGE                  = "${BASE_IMAGE}-certbot"
+							env.BUILDX_PUSH_TAGS               = "-t ${BASE_IMAGE}"
 							env.BUILDX_PUSH_TAGS_ACMESH        = "${BUILDX_PUSH_TAGS}-acmesh"
 							env.BUILDX_PUSH_TAGS_CERTBOT       = "${BUILDX_PUSH_TAGS}-certbot"
 							env.BUILDX_PUSH_TAGS_ACMESH_GOLANG = "${BUILDX_PUSH_TAGS}-acmesh-golang"
