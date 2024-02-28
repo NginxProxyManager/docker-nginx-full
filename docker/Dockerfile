@@ -61,6 +61,7 @@ RUN apt-get update \
 	gettext \
 	wget \
 	xz-utils \
+	libmaxminddb-dev \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
