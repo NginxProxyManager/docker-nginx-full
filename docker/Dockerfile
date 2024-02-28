@@ -19,7 +19,8 @@ RUN apt-get update \
 	openssl unzip \
 	wget \
 	zlib1g-dev \
-	git
+	git \
+	libmaxminddb-dev
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
