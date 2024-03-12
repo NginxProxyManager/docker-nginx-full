@@ -1,5 +1,5 @@
 ARG ACMESH_IMAGE=nginxproxymanager/nginx-full:acmesh
-FROM golang:1.21 as go
+FROM golang:1.22.1 as go
 FROM $ACMESH_IMAGE as final
 ARG ACMESH_IMAGE
 ARG TARGETPLATFORM
@@ -33,7 +33,7 @@ WORKDIR /root
 COPY ./files/.bashrc.acmesh-golang /root/.bashrc
 
 # Gotools
-RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.55.2
+RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.56.2
 RUN go install github.com/kyoh86/richgo@latest \
 	&& go install github.com/mfridman/tparse@latest \
 	&& go install golang.org/x/vuln/cmd/govulncheck@latest \
