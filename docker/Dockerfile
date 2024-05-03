@@ -19,7 +19,8 @@ RUN apt-get update \
 	openssl unzip \
 	wget \
 	zlib1g-dev \
-	git
+	git \
+	libmaxminddb-dev
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
@@ -60,6 +61,7 @@ RUN apt-get update \
 	gettext \
 	wget \
 	xz-utils \
+	libmaxminddb-dev \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old

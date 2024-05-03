@@ -6,12 +6,14 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION} with nginx_http_geoip2 module...${RESET}"
 
 cd /tmp
 wget "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz"
 tar -xzf openresty-${OPENRESTY_VERSION}.tar.gz
 mv /tmp/openresty-${OPENRESTY_VERSION} /tmp/openresty
+git clone https://github.com/leev/ngx_http_geoip2_module.git
+mv /tmp/ngx_http_geoip2_module /tmp/openresty/ngx_http_geoip2_module
 cd /tmp/openresty
 
 ./configure \
@@ -52,7 +54,8 @@ cd /tmp/openresty
 	--with-stream \
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
-	--with-stream_ssl_preread_module
+	--with-stream_ssl_preread_module \
+	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module
 
 make -j2
 
