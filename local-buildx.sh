@@ -6,8 +6,7 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-REGISTRY=${REGISTRY:-docker.jc21.com/}
-DOCKER_IMAGE="${REGISTRY}jc21/nginx-full"
+DOCKER_IMAGE="${REGISTRY:-}nginxproxymanager/nginx-full"
 PLATFORMS=linux/amd64,linux/arm64,linux/arm/7
 
 export OPENRESTY_VERSION=1.21.4.3
