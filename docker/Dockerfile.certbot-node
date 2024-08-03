@@ -1,5 +1,5 @@
 ARG CERTBOT_IMAGE=nginxproxymanager/nginx-full:certbot
-FROM $CERTBOT_IMAGE as final
+FROM $CERTBOT_IMAGE AS final
 ARG CERTBOT_IMAGE
 ARG TARGETPLATFORM
 

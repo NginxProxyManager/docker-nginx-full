@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=nginxproxymanager/nginx-full:latest
-FROM $BASE_IMAGE as final
+FROM $BASE_IMAGE AS final
 ARG BASE_IMAGE
 ARG TARGETPLATFORM
 

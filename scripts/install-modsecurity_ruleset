@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Installing ModSecurity CoreRuleSet ${YELLOW}${CSR_VERSION}...${RESET}"
+
+cd /tmp
+mkdir -p /etc/modsecurity
+wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v${CSR_VERSION}.tar.gz
+tar -xzf v${CSR_VERSION}.tar.gz --strip 1 -C /etc/modsecurity
+rm -rf v${CSR_VERSION}.tar.gz
+
+echo -e "${BLUE}❯ ${GREEN}ModSecurity CoreRuleSet install completed${RESET}"
