@@ -26,6 +26,7 @@ docker buildx build \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
 	--build-arg CROWDSEC_OPENRESTY_BOUNCER_VERSION \
+	--build-arg CSR_VERSION \
 	$@ \
 	.
 
