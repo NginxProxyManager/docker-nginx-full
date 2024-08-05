@@ -54,7 +54,6 @@ cd /tmp/openresty
 	--with-stream \
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
-	--with-stream_log_module \
 	--with-stream_ssl_preread_module \
 	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module
 
