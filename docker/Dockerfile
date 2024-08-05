@@ -2,11 +2,12 @@
 # Nginx Builder
 #############
 
-FROM debian:bookworm-slim as nginxbuilder
+FROM debian:bookworm-slim AS nginxbuilder
 
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
+ARG CSR_VERSION
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -16,7 +17,11 @@ RUN apt-get update \
 	libpcre3-dev \
 	libreadline-dev \
 	libssl-dev \
-	openssl unzip \
+	openssl \
+	unzip \
+	autoconf \
+	automake \
+	libtool \
 	wget \
 	zlib1g-dev \
 	git \
@@ -26,6 +31,9 @@ RUN apt-get update \
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
+COPY ./scripts/build-modsecurity /tmp/build-modsecurity
+RUN /tmp/build-modsecurity
+
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
 RUN /tmp/build-openresty
@@ -34,7 +42,7 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM debian:bookworm-slim as final
+FROM debian:bookworm-slim AS final
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -71,6 +79,9 @@ COPY ./files/.bashrc /root/.bashrc
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
 COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
+COPY --from=nginxbuilder /tmp/ModSecurity /tmp/ModSecurity
+COPY --from=nginxbuilder /tmp/ModSecurity-nginx /tmp/ModSecurity-nginx
+COPY ./scripts/install-modsecurity_ruleset /tmp/install-modsecurity_ruleset
 COPY ./scripts/install-lua /tmp/install-lua
 
 # Copy openresty build from first image
@@ -82,8 +93,10 @@ COPY ./scripts/install-crowdsec_openresty_bouncer /tmp/install-crowdsec_openrest
 
 ARG OPENRESTY_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
+ARG CSR_VERSION
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 	OPENRESTY_VERSION=${OPENRESTY_VERSION} \
+	CSR_VERSION=${CSR_VERSION} \
 	CROWDSEC_OPENRESTY_BOUNCER_VERSION=${CROWDSEC_OPENRESTY_BOUNCER_VERSION}
 
 # Install openresty, lua, then clean up file system
@@ -91,6 +104,7 @@ RUN apt-get update \
 	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
 	&& /tmp/install-openresty \
+	&& /tmp/install-modsecurity_ruleset \
 	&& apt-get remove -y make gcc git wget gettext \
 	&& apt-get autoremove -y \
 	&& apt-get clean \

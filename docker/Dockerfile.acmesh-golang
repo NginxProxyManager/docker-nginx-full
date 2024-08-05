@@ -1,6 +1,6 @@
 ARG ACMESH_IMAGE=nginxproxymanager/nginx-full:acmesh
-FROM golang:latest as go
-FROM $ACMESH_IMAGE as final
+FROM golang:latest AS go
+FROM $ACMESH_IMAGE AS final
 ARG ACMESH_IMAGE
 ARG TARGETPLATFORM
 
