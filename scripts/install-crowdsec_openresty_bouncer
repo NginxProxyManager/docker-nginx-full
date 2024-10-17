@@ -21,7 +21,7 @@ tar xzf crowdsec-openresty-bouncer.tgz --strip 1 -C /tmp/crowdsec
 rm -rf /tmp/crowdsec-openresty-bouncer.tgz
 cd /tmp/crowdsec
 
-bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --docker
+bash ./install.sh --NGINX_CONF_DIR=/etc/nginx/conf.d --LIB_PATH=/etc/nginx/lualib --CONFIG_PATH=/defaults/crowdsec --DATA_PATH=/defaults/crowdsec --SSL_CERTS_PATH=/etc/ssl/certs/GTS_Root_R1.pem --docker
 sed -i 's|ENABLED=.*|ENABLED=false|' /defaults/crowdsec/crowdsec-openresty-bouncer.conf
 rm -rf /tmp/crowdsec
 
