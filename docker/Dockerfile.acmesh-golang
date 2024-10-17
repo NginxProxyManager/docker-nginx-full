@@ -1,6 +1,6 @@
 ARG ACMESH_IMAGE=nginxproxymanager/nginx-full:acmesh
-FROM golang:latest as go
-FROM $ACMESH_IMAGE as final
+FROM golang:latest AS go
+FROM $ACMESH_IMAGE AS final
 ARG ACMESH_IMAGE
 ARG TARGETPLATFORM
 
@@ -29,15 +29,11 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" \
 	&& echo "====> ${TARGETPLATFORM}: $(go version)"
 
 WORKDIR /root
-
 COPY ./files/.bashrc.acmesh-golang /root/.bashrc
 
 # Gotools
-RUN cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.56.2
-RUN go install github.com/kyoh86/richgo@latest \
-	&& go install github.com/mfridman/tparse@latest \
-	&& go install golang.org/x/vuln/cmd/govulncheck@latest \
-	&& rm -rf /root/.cache/go-build
+COPY ./scripts/install-gotools /tmp/install-gotools
+RUN /tmp/install-gotools
 
 LABEL org.label-schema.cmd="docker run --rm -ti nginxproxymanager/nginx-full:acmesh-golang"
 

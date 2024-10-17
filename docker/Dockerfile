@@ -2,7 +2,7 @@
 # Nginx Builder
 #############
 
-FROM debian:bookworm-slim as nginxbuilder
+FROM debian:bookworm-slim AS nginxbuilder
 
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
@@ -34,7 +34,7 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM debian:bookworm-slim as final
+FROM debian:bookworm-slim AS final
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

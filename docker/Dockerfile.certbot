@@ -4,7 +4,7 @@ ARG BASE_IMAGE=nginxproxymanager/nginx-full:latest
 # Certbot Builder
 #############
 
-FROM debian:bookworm-slim as certbotbuilder
+FROM debian:bookworm-slim AS certbotbuilder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -41,7 +41,7 @@ RUN pip install --no-cache-dir --upgrade pyopenssl \
 #############
 # Final Image
 #############
-FROM $BASE_IMAGE as final
+FROM $BASE_IMAGE AS final
 ARG BASE_IMAGE
 ARG TARGETPLATFORM
 
