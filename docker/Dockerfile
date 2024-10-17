@@ -11,6 +11,7 @@ ARG LUAROCKS_VERSION
 RUN apt-get update \
 	&& apt-get install -y \
 	build-essential \
+	cmake \
 	ca-certificates \
 	libncurses-dev \
 	libpcre3-dev \
@@ -21,6 +22,10 @@ RUN apt-get update \
 	zlib1g-dev \
 	git \
 	libmaxminddb-dev
+
+# brotli build
+COPY ./scripts/build-brotli /tmp/build-brotli
+RUN /tmp/build-brotli
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
@@ -70,6 +75,7 @@ COPY ./files/.bashrc /root/.bashrc
 
 # Copy lua and luarocks builds from first image
 COPY --from=nginxbuilder /tmp/lua /tmp/lua
+COPY --from=nginxbuilder /tmp/ngx_brotli /tmp/ngx_brotli
 COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
 COPY ./scripts/install-lua /tmp/install-lua
 

@@ -12,6 +12,7 @@ cd /tmp
 wget "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz"
 tar -xzf openresty-${OPENRESTY_VERSION}.tar.gz
 mv /tmp/openresty-${OPENRESTY_VERSION} /tmp/openresty
+
 git clone https://github.com/leev/ngx_http_geoip2_module.git
 mv /tmp/ngx_http_geoip2_module /tmp/openresty/ngx_http_geoip2_module
 cd /tmp/openresty
@@ -55,7 +56,8 @@ cd /tmp/openresty
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
 	--with-stream_ssl_preread_module \
-	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module
+	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module \
+	--add-module=/tmp/ngx_brotli
 
 make -j2
 
