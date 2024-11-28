@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+echo -e "${BLUE}❯ ${CYAN}Installing OWASP core ruleset ${YELLOW}${CRS_VERSION}...${RESET}"
+
+cd /tmp
+mkdir -p /etc/csr
+wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v${CRS_VERSION}.tar.gz
+tar -xzf v${CRS_VERSION}.tar.gz --strip 1 -C /etc/csr
+rm -rf v${CRS_VERSION}.tar.gz
+mv /etc/csr/{crs-setup.conf.example,crs-setup.conf}
+mv /etc/csr/rules/{REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example,REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf}
+mv /etc/csr/rules/{RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example,RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf}
+
+echo -e "${BLUE}❯ ${GREEN}OWASP core ruleset install completed${RESET}"

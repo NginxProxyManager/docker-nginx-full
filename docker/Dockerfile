@@ -7,6 +7,8 @@ FROM debian:bookworm-slim AS nginxbuilder
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
+ARG LIBMODSECURITY_VERSION
+ARG MODSECURITY_NGINX_VERSION
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -16,7 +18,12 @@ RUN apt-get update \
 	libpcre3-dev \
 	libreadline-dev \
 	libssl-dev \
-	openssl unzip \
+	openssl \
+	unzip \
+	autoconf \
+	automake \
+	libtool \
+	libpcre2-dev \
 	wget \
 	zlib1g-dev \
 	git \
@@ -25,6 +32,10 @@ RUN apt-get update \
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
+
+# LibModSecurity build
+COPY ./scripts/build-modsecurity /tmp/build-modsecurity
+RUN /tmp/build-modsecurity
 
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
@@ -40,6 +51,7 @@ LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG TARGETPLATFORM
+ARG CRS_VERSION
 RUN echo "Base: debian:bookworm-slim, ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
 
 # OpenResty uses LuaJIT which has a dependency on GCC
@@ -74,11 +86,15 @@ COPY --from=nginxbuilder /tmp/luarocks /tmp/luarocks
 COPY ./scripts/install-lua /tmp/install-lua
 
 # Copy openresty build from first image
+COPY --from=nginxbuilder /tmp/modsecurity /tmp/modsecurity
 COPY --from=nginxbuilder /tmp/openresty /tmp/openresty
 COPY ./scripts/install-openresty /tmp/install-openresty
 
 # Copy crowdsec openresty bouncer install script
 COPY ./scripts/install-crowdsec_openresty_bouncer /tmp/install-crowdsec_openresty_bouncer
+
+# Copy OWASP core ruleset install script
+COPY ./scripts/install-crs /tmp/install-crs
 
 ARG OPENRESTY_VERSION
 ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION
@@ -86,12 +102,13 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 	OPENRESTY_VERSION=${OPENRESTY_VERSION} \
 	CROWDSEC_OPENRESTY_BOUNCER_VERSION=${CROWDSEC_OPENRESTY_BOUNCER_VERSION}
 
-# Install openresty, lua, then clean up file system
+# Install openresty, lua, csr, then clean up file system
 RUN apt-get update \
-	&& apt-get install -y gcc make socat git \
+	&& apt-get install -y build-essential gcc make socat git autoconf automake libtool libpcre2-dev \
 	&& /tmp/install-lua \
+	&& /tmp/install-crs \
 	&& /tmp/install-openresty \
-	&& apt-get remove -y make gcc git wget gettext \
+	&& apt-get remove -y build-essential gcc make git wget gettext autoconf automake libtool libpcre2-dev \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \

@@ -8,6 +8,10 @@ RESET='\E[0m'
 
 echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
 
+cd /tmp/modsecurity
+make install
+rm -rf /tmp/modsecurity
+
 cd /tmp/openresty
 make install
 rm -rf /tmp/openresty
