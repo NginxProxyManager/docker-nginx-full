@@ -24,6 +24,7 @@ RUN apt-get update \
 	automake \
 	libtool \
 	libpcre2-dev \
+	libpcre2-posix3 \
 	wget \
 	zlib1g-dev \
 	git \

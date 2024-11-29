@@ -29,6 +29,6 @@ mv /tmp/luarocks-${LUAROCKS_VERSION} /tmp/luarocks
 cd /tmp/luarocks
 
 ./configure
-make
+make -j$(nproc)
 
 echo -e "${BLUE}❯ ${GREEN}Luarocks build completed${RESET}"
