@@ -1,0 +1,237 @@
+name: Build Docker images
+
+on:
+  pull_request:
+    branches: ["master"]
+  push:
+    branches: ["master"]
+
+env:
+  BASE_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/docker-nginx-full
+
+jobs:
+  build_base_image:
+    runs-on: ubuntu-latest
+    name: Build ${{ matrix.platform }} base image
+    strategy:
+      matrix:
+        platform:
+            - amd64
+            - arm64
+            - arm/v7
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Set build arguments
+        run: |
+          platform=linux/${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV   
+          cat versions >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BASE_IMAGE }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          tags: docker.io/${{ env.BASE_IMAGE }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/${{ matrix.platform }}
+          file: docker/Dockerfile
+          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          build-args: |
+            OPENRESTY_VERSION=${{ env.OPENRESTY_VERSION }}
+            CROWDSEC_OPENRESTY_BOUNCER_VERSION=${{ env.CROWDSEC_OPENRESTY_BOUNCER_VERSION }}
+            LUA_VERSION=${{ env.LUA_VERSION }}
+            LUAROCKS_VERSION=${{ env.LUAROCKS_VERSION }}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"          
+      
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge_base_image:
+    runs-on: ubuntu-latest
+    needs:
+      - build_base_image
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BASE_IMAGE }}
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.BASE_IMAGE }}@sha256:%s ' *)          
+      
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.BASE_IMAGE }}:${{ steps.meta.outputs.version }}
+
+  build_acme_client_imags:
+    runs-on: ubuntu-latest
+    name: Build ${{ matrix.platform }} ${{ matrix.acme_client }} image
+    strategy:
+      matrix:
+        acme_client:
+          - acmesh
+          - acmesh-golang
+          - certbot
+          - certbot-node
+        platform:
+          - amd64
+          - arm64
+          - arm/v7
+    needs:
+      - merge_base_image
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Set build arguments
+        run: |
+          platform=linux/${{ matrix.platform }}
+          acme_client=${{ matrix.acme_client }}
+          echo "PLATFORM_CLIENT_PAIR=${acme_client}-${platform//\//-}" >> $GITHUB_ENV   
+          cat versions >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BASE_IMAGE }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          tags: docker.io/${{ env.BASE_IMAGE }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/${{ matrix.platform }}
+          file: docker/Dockerfile.${{ matrix.acme_client }}
+          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          build-args: |
+            BASE_IMAGE=${{ env.BASE_IMAGE }}:${{ steps.meta.outputs.version }}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"          
+      
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_CLIENT_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge_acme_client_images:
+    runs-on: ubuntu-latest
+    name: Merge ${{ matrix.acme_client }} platform images
+    strategy:
+      matrix:
+        acme_client:
+          - acmesh
+          - acmesh-golang
+          - certbot
+          - certbot-node
+    needs:
+      - build_acme_client_imags
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-${{ matrix.acme_client }}-linux*
+          merge-multiple: true
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BASE_IMAGE }}
+          tags: |
+            type=schedule
+            type=ref,prefix=${{ matrix.acme_client }}-,event=branch
+            type=ref,prefix=${{ matrix.acme_client }}-,event=tag
+            type=ref,prefix=${{ matrix.acme_client }}-,event=pr
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.BASE_IMAGE }}@sha256:%s ' *)          
+      
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.BASE_IMAGE }}:${{ steps.meta.outputs.version }}
