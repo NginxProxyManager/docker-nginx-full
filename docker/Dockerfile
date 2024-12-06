@@ -23,8 +23,6 @@ RUN apt-get update \
 	autoconf \
 	automake \
 	libtool \
-	libpcre2-dev \
-	libpcre2-posix3 \
 	wget \
 	zlib1g-dev \
 	git \
@@ -105,11 +103,11 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 
 # Install openresty, lua, csr, then clean up file system
 RUN apt-get update \
-	&& apt-get install -y build-essential gcc make socat git autoconf automake libtool libpcre2-dev \
+	&& apt-get install -y build-essential gcc make socat git autoconf automake libtool \
 	&& /tmp/install-lua \
 	&& /tmp/install-crs \
 	&& /tmp/install-openresty \
-	&& apt-get remove -y build-essential gcc make git wget gettext autoconf automake libtool libpcre2-dev \
+	&& apt-get remove -y build-essential gcc make git wget gettext autoconf automake libtool \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \

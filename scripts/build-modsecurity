@@ -13,7 +13,7 @@ git clone --recursive --branch v${LIBMODSECURITY_VERSION} https://github.com/owa
 cd /tmp/modsecurity
 
 ./build.sh
-./configure --with-pcre2
+./configure
 
 make -j$(nproc)
 make install
