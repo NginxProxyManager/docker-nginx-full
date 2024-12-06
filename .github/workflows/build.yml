@@ -18,7 +18,7 @@ jobs:
         platform:
             - amd64
             - arm64
-            # - arm/v7
+            - arm/v7
 
     steps:
       - name: Check out repository
@@ -130,7 +130,7 @@ jobs:
         platform:
           - amd64
           - arm64
-          # - arm/v7
+          - arm/v7
     needs:
       - merge_base_image
 
