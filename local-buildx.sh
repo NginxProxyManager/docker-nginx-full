@@ -9,13 +9,7 @@ RESET='\E[0m'
 DOCKER_IMAGE="${REGISTRY:-}nginxproxymanager/nginx-full"
 PLATFORMS=linux/amd64,linux/arm64,linux/arm/7
 
-export OPENRESTY_VERSION=1.25.3.2
-export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7
-export LUA_VERSION=5.1.5
-export LUAROCKS_VERSION=3.3.1
-export LIBMODSECURITY_VERSION=3.0.13
-export MODSECURITY_NGINX_VERSION=1.0.3
-export CRS_VERSION=4.8.0
+for version in `cat versions`; do export $version; done
 
 export BASE_IMAGE="${DOCKER_IMAGE}:latest"
 export ACMESH_IMAGE="${DOCKER_IMAGE}:acmesh"
