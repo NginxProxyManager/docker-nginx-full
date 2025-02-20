@@ -9,7 +9,7 @@ RESET='\E[0m'
 DOCKER_IMAGE="${REGISTRY:-}nginxproxymanager/nginx-full"
 PLATFORMS=linux/amd64,linux/arm64,linux/arm/7
 
-export OPENRESTY_VERSION=1.25.3.2
+export OPENRESTY_VERSION=1.27.1.1
 export CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7
 export LUA_VERSION=5.1.5
 export LUAROCKS_VERSION=3.3.1
