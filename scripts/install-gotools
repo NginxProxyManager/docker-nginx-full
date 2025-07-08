@@ -7,8 +7,6 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-GSA_VERSION=$(curl -sSfL "https://api.github.com/repos/Zxilly/go-size-analyzer/releases/latest" | jq -r '.tag_name')
-
 # Determine the correct binary file for the architecture given
 case $TARGETPLATFORM in
 	linux/arm64)
@@ -42,12 +40,6 @@ if [ "$ARCH" = "amd64" ]; then
 
 	echo -e "${BLUE}❯ ${CYAN}Installing go-test-coverage ...${RESET}"
 	go install github.com/vladopajic/go-test-coverage/v2@latest
-
-	echo -e "${BLUE}❯ ${CYAN}Installing go-size-analyzer ...${RESET}"
-	wget -O "/tmp/go-size-analyzer_linux_${ARCH}.tar.gz" "https://github.com/Zxilly/go-size-analyzer/releases/download/${GSA_VERSION}/go-size-analyzer_linux_${ARCH}.tar.gz"
-	cd /usr/bin/
-	tar -xzf "/tmp/go-size-analyzer_linux_${ARCH}.tar.gz" gsa
-	rm -rf "/tmp/go-size-analyzer_linux_${ARCH}.tar.gz"
 
 	echo -e "${BLUE}❯ ${CYAN}Installing go-mod-upgrade ...${RESET}"
 	go install github.com/oligot/go-mod-upgrade@latest
