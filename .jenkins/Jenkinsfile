@@ -120,17 +120,8 @@ pipeline {
 		}
 	}
 	post {
-		success {
-			juxtapose event: 'success'
-			sh 'figlet "SUCCESS"'
-		}
-		failure {
-			juxtapose event: 'failure'
-			sh 'figlet "FAILURE"'
-		}
-		unstable {
-			juxtapose event: 'unstable'
-			sh 'figlet "UNSTABLE"'
+		always {
+			printResult(true)
 		}
 	}
 }
