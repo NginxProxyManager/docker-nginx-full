@@ -20,7 +20,8 @@ RUN apt-get update \
 	wget \
 	zlib1g-dev \
 	git \
-	libmaxminddb-dev
+	libmaxminddb-dev \
+	libbrotli-dev
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
@@ -63,6 +64,7 @@ RUN apt-get update \
 	xz-utils \
 	libmaxminddb-dev \
 	moreutils \
+	libbrotli1 \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/* /var/log/* /tmp/* /var/lib/dpkg/status-old
