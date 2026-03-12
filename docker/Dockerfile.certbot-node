@@ -9,7 +9,7 @@ RUN echo "Node: $CERTBOT_IMAGE, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-ar
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 	&& apt-get update \
 	&& apt-get install -y gcc make g++ git nodejs \
 	&& apt-get clean \

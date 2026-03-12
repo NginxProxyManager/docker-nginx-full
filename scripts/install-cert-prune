@@ -17,10 +17,6 @@ case $TARGETPLATFORM in
 		ARCH=arm64
 		;;
 
-	linux/arm/v7)
-		ARCH=arm
-		;;
-
 	*)
 		ARCH=amd64
 		;;
