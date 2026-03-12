@@ -59,7 +59,7 @@ cd /tmp/openresty
 	--with-stream_ssl_preread_module \
 	--with-http_v3_module \
 	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module \
-  --add-dynamic-module=/tmp/openresty/nginx-ntlm-module
+	--add-dynamic-module=/tmp/openresty/nginx-ntlm-module
 
 make -j2
 
