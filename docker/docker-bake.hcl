@@ -8,7 +8,7 @@ variable "TAG_PREFIX" {
 	default = ""
 }
 variable "OPENRESTY_VERSION" {
-	default = "1.29.2.5"
+	default = "1.31.1.1"
 }
 variable "LUA_VERSION" {
 	default = "5.1.5"
