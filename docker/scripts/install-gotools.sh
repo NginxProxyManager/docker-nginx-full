@@ -35,7 +35,7 @@ if [ "$ARCH" = "amd64" ]; then
 	go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators@latest
 	go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 	go install github.com/daveshanley/vacuum@v0.26.4
-	go install golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest
+	go install golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest
 fi
 
 rm -rf "$(go env GOPATH)/.cache/go-build"
