@@ -68,6 +68,6 @@ cd "/tmp/openresty/openresty-${OPENRESTY_VERSION}"
 	--with-http_v3_module \
 	--add-dynamic-module=/tmp/openresty/ngx_http_geoip2_module
 
-make -j2
+make -j"$(nproc)"
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty build completed${RESET}"

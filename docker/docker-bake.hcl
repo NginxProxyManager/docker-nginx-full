@@ -10,6 +10,9 @@ variable "TAG_PREFIX" {
 variable "OPENRESTY_VERSION" {
 	default = "1.31.1.1"
 }
+variable "NODE_MAJOR" {
+	default = "26"
+}
 variable "LUA_VERSION" {
 	default = "5.1.5"
 }
@@ -68,6 +71,9 @@ target "certbot-node" {
 	dockerfile = "docker/Dockerfile.certbot-node"
 	contexts = {
 		certbot = "target:certbot"
+	}
+	args = {
+		NODE_MAJOR = "${NODE_MAJOR}"
 	}
 	tags = ["${DOCKER_IMAGE}:${TAG_PREFIX}certbot-node"]
 }
