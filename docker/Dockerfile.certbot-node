@@ -1,6 +1,7 @@
 FROM certbot AS final
 
 ARG TARGETPLATFORM
+ARG NODE_MAJOR=26
 
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
@@ -8,7 +9,7 @@ RUN echo "Certbot + Node, ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
 
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
-RUN curl -fsSL "https://deb.nodesource.com/setup_22.x" | bash - \
+RUN curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash - \
 	&& apt-get update \
 	&& apt-get install -y gcc make g++ git nodejs \
 	&& apt-get clean \
