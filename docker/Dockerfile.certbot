@@ -32,8 +32,8 @@ ENV PATH="/opt/certbot/bin:$PATH"
 
 RUN curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3
 
-RUN pip install --no-cache-dir --upgrade 'pyopenssl==24.3.0' \
-	&& pip install --no-cache-dir 'cffi' 'certbot' 'cryptography==48.0.0' \
+RUN pip install --no-cache-dir --upgrade 'pyopenssl' \
+	&& pip install --no-cache-dir 'cffi' 'certbot' 'cryptography' \
 	&& pip install 'tldextract' 'zope' 'pip-system-certs'
 
 #############
