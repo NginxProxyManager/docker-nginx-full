@@ -24,6 +24,14 @@ cd /tmp/openresty
 
 make
 
+# Backport the two nginx 1.31.9 HTTP/2 security fixes to this OpenResty release.
+# The DATA-frame queue change is required by the CVE-2026-123007 fix.
+if [ "${OPENRESTY_VERSION}" = "1.31.8.1" ]; then
+	for patch in http2-data-frame-queue.patch CVE-2026-123633.patch CVE-2026-123007.patch; do
+		git -C "/tmp/openresty/openresty-${OPENRESTY_VERSION}/bundle/nginx-1.31.8" apply "/tmp/openresty-patches/$patch"
+	done
+fi
+
 cd "/tmp/openresty/openresty-${OPENRESTY_VERSION}"
 
 ./configure \
