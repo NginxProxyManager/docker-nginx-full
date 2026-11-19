@@ -32,6 +32,7 @@ COPY ./docker/scripts/build-lua.sh /tmp/build-lua.sh
 RUN /tmp/build-lua.sh
 
 # Nginx build
+COPY ./docker/patches/ /tmp/openresty-patches/
 COPY ./docker/scripts/build-openresty.sh /tmp/build-openresty.sh
 RUN /tmp/build-openresty.sh
 
