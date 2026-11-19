@@ -24,17 +24,20 @@ cd /tmp/openresty
 
 make
 
-# Backport the two nginx 1.31.9 HTTP/2 security fixes to this OpenResty release.
-# The DATA-frame queue change is required by the CVE-2026-123007 fix.
+# Bring the nginx 1.31.8 bundled in this OpenResty release up to nginx 1.31.9's source.
+# The patch is the unmodified diff between the two nginx release tags (see its header),
+# so it carries every 1.31.9 fix. git apply allows no fuzz: a hunk whose context
+# does not match fails the build. The build name makes `nginx -v` show the patch level.
+BUILD_ARGS=()
 if [ "${OPENRESTY_VERSION}" = "1.31.8.1" ]; then
-	for patch in http2-data-frame-queue.patch CVE-2026-123633.patch CVE-2026-123007.patch; do
-		git -C "/tmp/openresty/openresty-${OPENRESTY_VERSION}/bundle/nginx-1.31.8" apply "/tmp/openresty-patches/$patch"
-	done
+	git -C "/tmp/openresty/openresty-${OPENRESTY_VERSION}/bundle/nginx-1.31.8" apply /tmp/openresty-patches/nginx-1.31.9.patch
+	BUILD_ARGS=(--build=with-nginx-1.31.9.patch)
 fi
 
 cd "/tmp/openresty/openresty-${OPENRESTY_VERSION}"
 
 ./configure \
+	"${BUILD_ARGS[@]}" \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--modules-path=/usr/lib/nginx/modules \
