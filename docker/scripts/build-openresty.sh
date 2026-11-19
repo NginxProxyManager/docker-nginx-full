@@ -18,7 +18,13 @@ wget "https://github.com/openresty/openresty/archive/refs/tags/v${OPENRESTY_VERS
 
 tar -xzf "openresty-${OPENRESTY_VERSION}.tar.gz"
 mv "/tmp/openresty-${OPENRESTY_VERSION}" /tmp/openresty
+# Pinned, so a new push to that repo can't change what gets compiled into nginx.
+# To update: review the module's changes, then replace the hash. The build fails
+# if this commit can't be checked out.
+GEOIP2_COMMIT=445df24ef3781e488cee3dfe8a1e111997fc1dfe
 git clone 'https://github.com/leev/ngx_http_geoip2_module.git'
+git -C /tmp/ngx_http_geoip2_module -c advice.detachedHead=false checkout "$GEOIP2_COMMIT"
+[ "$(git -C /tmp/ngx_http_geoip2_module rev-parse HEAD)" = "$GEOIP2_COMMIT" ]
 mv /tmp/ngx_http_geoip2_module /tmp/openresty/ngx_http_geoip2_module
 cd /tmp/openresty
 
